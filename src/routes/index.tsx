@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Map from "../components/map/index";
 
 export const Route = createFileRoute("/")({
-  component: () => <div className="p-6">Home</div>,
+  component: Map,
 });

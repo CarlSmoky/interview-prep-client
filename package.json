@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.141.4",
+    "mapbox-gl": "^3.17.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@tanstack/router-plugin": "^1.141.5",
+    "@types/mapbox-gl": "^3.4.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
@@ -30,5 +32,6 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
     "vite-tsconfig-paths": "^6.0.2"
-  }
+  },
+  "packageManager": "pnpm@10.19.0+sha512.c9fc7236e92adf5c8af42fd5bf1612df99c2ceb62f27047032f4720b33f8eacdde311865e91c411f2774f618d82f320808ecb51718bfa82c060c4ba7c76a32b8"
 }
