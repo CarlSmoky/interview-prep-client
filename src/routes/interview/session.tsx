@@ -71,7 +71,7 @@ function RouteComponent() {
       console.warn('No session data found, redirecting to interview setup')
       navigate({ to: '/interview' })
     }
-    
+
     // Load Vapi key from env or localStorage
     const storedKey = import.meta.env.VITE_VAPI_PUBLIC_KEY || localStorage.getItem('vapiPublicKey') || ''
     setVapiKey(storedKey)
@@ -86,9 +86,9 @@ function RouteComponent() {
 
   const handleSubmitAnswer = async (answerText?: string) => {
     const finalAnswer = answerText || answer
-    
+
     console.log('handleSubmitAnswer called with:', finalAnswer.substring(0, 50) + '...')
-    
+
     if (!finalAnswer.trim()) {
       setError('Please provide an answer')
       return
@@ -115,11 +115,11 @@ function RouteComponent() {
         answer: finalAnswer,
         evaluation: response.evaluation
       }
-      
+
       // Read the latest results from sessionStorage to ensure we don't lose any
       const latestStoredStr = sessionStorage.getItem('questionResults')
       const latestStored = latestStoredStr ? JSON.parse(latestStoredStr) : []
-      
+
       const updatedResults = [...latestStored, newResult]
       setResults(updatedResults)
       sessionStorage.setItem('questionResults', JSON.stringify(updatedResults))
@@ -183,21 +183,19 @@ function RouteComponent() {
             <div className="mb-4 flex gap-2 justify-center">
               <button
                 onClick={() => setUseSimpleSpeech(false)}
-                className={`px-4 py-2 rounded text-sm ${
-                  !useSimpleSpeech 
-                    ? 'bg-white text-black' 
+                className={`px-4 py-2 rounded text-sm ${!useSimpleSpeech
+                    ? 'bg-white text-black'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                  }`}
               >
                 Vapi (Professional)
               </button>
               <button
                 onClick={() => setUseSimpleSpeech(true)}
-                className={`px-4 py-2 rounded text-sm ${
-                  useSimpleSpeech 
-                    ? 'bg-white text-black' 
+                className={`px-4 py-2 rounded text-sm ${useSimpleSpeech
+                    ? 'bg-white text-black'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                  }`}
               >
                 Browser Speech (Free)
               </button>

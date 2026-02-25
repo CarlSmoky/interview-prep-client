@@ -19,12 +19,12 @@ interface VoiceInputProps {
   assistantId?: string
 }
 
-export function VoiceInput({ 
-  question, 
-  onTranscriptComplete, 
+export function VoiceInput({
+  question,
+  onTranscriptComplete,
   isDisabled,
   vapiPublicKey,
-  assistantId 
+  assistantId
 }: VoiceInputProps) {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -60,32 +60,32 @@ export function VoiceInput({
     try {
       // Use assistant ID if provided, otherwise use minimal configuration
       // Vapi only handles voice transcription - backend evaluates answers
-      const config = assistantId 
-        ? { assistantId } 
+      const config = assistantId
+        ? { assistantId }
         : {
-            name: 'Interview Transcriber',
-            // Minimal first message - just to acknowledge the mic is active
-            firstMessage: 'Ready.',
-            model: {
-              provider: 'openai',
-              model: 'gpt-3.5-turbo',  // Minimal model, only for basic acknowledgments
-              messages: [
-                {
-                  role: 'system',
-                  content: 'You are a simple voice transcriber. Only say "Ready" when starting and "Got it" when the user stops speaking. Do not engage in conversation.'
-                }
-              ]
-            },
-            transcriber: {
-              provider: 'deepgram',
-              model: 'nova-2',  // This does the actual speech-to-text
-              language: 'en'
-            },
-            voice: {
-              provider: 'playht',
-              voiceId: 'jennifer'
-            }
+          name: 'Interview Transcriber',
+          // Minimal first message - just to acknowledge the mic is active
+          firstMessage: 'Ready.',
+          model: {
+            provider: 'openai',
+            model: 'gpt-3.5-turbo',  // Minimal model, only for basic acknowledgments
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a simple voice transcriber. Only say "Ready" when starting and "Got it" when the user stops speaking. Do not engage in conversation.'
+              }
+            ]
+          },
+          transcriber: {
+            provider: 'deepgram',
+            model: 'nova-2',  // This does the actual speech-to-text
+            language: 'en'
+          },
+          voice: {
+            provider: 'playht',
+            voiceId: 'jennifer'
           }
+        }
 
       console.log('Starting Vapi with config:', config)
       await vapiRef.current.start(config)
@@ -137,7 +137,7 @@ export function VoiceInput({
       vapiRef.current.stop()
       setIsListening(false)
       setIsInitializing(false)
-      
+
       // Submit the transcript
       if (transcript.trim()) {
         onTranscriptComplete(transcript)
@@ -160,8 +160,8 @@ export function VoiceInput({
           disabled={isDisabled || isInitializing}
           className={`
             w-24 h-24 rounded-full flex items-center justify-center transition-all
-            ${isListening 
-              ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+            ${isListening
+              ? 'bg-red-500 hover:bg-red-600 animate-pulse'
               : 'bg-white hover:bg-gray-200'
             }
             disabled:opacity-50 disabled:cursor-not-allowed
@@ -178,11 +178,11 @@ export function VoiceInput({
 
         <div className="text-center">
           <p className="text-sm font-medium text-white">
-            {isInitializing 
-              ? 'Initializing microphone...' 
-              : isListening 
-              ? 'Listening... Click to stop' 
-              : 'Click to start recording'
+            {isInitializing
+              ? 'Initializing microphone...'
+              : isListening
+                ? 'Listening... Click to stop'
+                : 'Click to start recording'
             }
           </p>
         </div>

@@ -16,10 +16,10 @@ interface SimpleSpeechInputProps {
   isDisabled?: boolean
 }
 
-export function SimpleSpeechInput({ 
-  question, 
-  onTranscriptComplete, 
-  isDisabled 
+export function SimpleSpeechInput({
+  question,
+  onTranscriptComplete,
+  isDisabled
 }: SimpleSpeechInputProps) {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -45,7 +45,7 @@ export function SimpleSpeechInput({
   useEffect(() => {
     // Check if browser supports Web Speech API
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-    
+
     if (!SpeechRecognition) {
       return
     }
@@ -81,7 +81,7 @@ export function SimpleSpeechInput({
           return updated
         })
       }
-      
+
       // Always show interim results so user knows it's working
       setInterimText(interimTranscript)
     }
@@ -101,12 +101,12 @@ export function SimpleSpeechInput({
     recognition.onend = () => {
       console.log('Speech recognition ended')
       setIsListening(false)
-      
+
       // If we should submit (user clicked stop), submit now with final transcript
       if (shouldSubmitRef.current) {
         const finalText = (finalTranscriptRef.current + ' ' + interimText).trim()
         console.log('Recognition ended, submitting:', finalText)
-        
+
         if (finalText) {
           onTranscriptComplete(finalText)
           setTranscript('')
@@ -133,16 +133,16 @@ export function SimpleSpeechInput({
   const readQuestionAloud = useCallback(() => {
     // Stop any ongoing speech
     window.speechSynthesis.cancel()
-    
+
     const utterance = new SpeechSynthesisUtterance(question)
     utterance.rate = 0.9 // Slightly slower for clarity
     utterance.pitch = 1
     utterance.volume = 1
-    
+
     utterance.onstart = () => setIsSpeaking(true)
     utterance.onend = () => setIsSpeaking(false)
     utterance.onerror = () => setIsSpeaking(false)
-    
+
     window.speechSynthesis.speak(utterance)
   }, [question])
 
@@ -152,7 +152,7 @@ export function SimpleSpeechInput({
       readQuestionAloud()
       hasReadQuestionRef.current = true
     }
-    
+
     // Reset when question changes
     return () => {
       hasReadQuestionRef.current = false
@@ -170,7 +170,7 @@ export function SimpleSpeechInput({
     setError('')
     shouldSubmitRef.current = false
     finalTranscriptRef.current = ''
-    
+
     try {
       recognitionRef.current.start()
       setIsListening(true)
@@ -250,8 +250,8 @@ export function SimpleSpeechInput({
           disabled={isDisabled}
           className={`
             w-24 h-24 rounded-full flex items-center justify-center transition-all
-            ${isListening 
-              ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
+            ${isListening
+              ? 'bg-red-500 hover:bg-red-600 animate-pulse'
               : 'bg-white hover:bg-gray-200'
             }
             disabled:opacity-50 disabled:cursor-not-allowed
@@ -266,11 +266,11 @@ export function SimpleSpeechInput({
 
         <div className="text-center">
           <p className="text-sm font-medium text-white">
-            {isDisabled 
-              ? '✓ Submitting your answer...' 
-              : isListening 
-              ? 'Listening... Click to stop and submit' 
-              : 'Click to start recording'
+            {isDisabled
+              ? '✓ Submitting your answer...'
+              : isListening
+                ? 'Listening... Click to stop and submit'
+                : 'Click to start recording'
             }
           </p>
         </div>
