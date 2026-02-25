@@ -27,6 +27,11 @@ function RouteComponent() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [storedResults, setStoredResults] = useState<QuestionResult[]>([])
+  const [metadata, setMetadata] = useState<{
+    interviewType?: string
+    level?: string
+    totalQuestions?: number
+  }>({})
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -35,6 +40,12 @@ function RouteComponent() {
       if (storedResultsStr) {
         const results = JSON.parse(storedResultsStr)
         setStoredResults(results)
+      }
+
+      // Load interview metadata
+      const metadataStr = sessionStorage.getItem('interviewMetadata')
+      if (metadataStr) {
+        setMetadata(JSON.parse(metadataStr))
       }
 
       const sessionId = sessionStorage.getItem('completedSessionId')
@@ -121,7 +132,17 @@ function RouteComponent() {
         {/* Header */}
         <div className="border border-white rounded-lg p-6 mb-6">
           <h1 className="text-3xl font-bold mb-2">Interview Complete!</h1>
-          <p className="text-gray-400 mb-4">Here are your results</p>
+          <div className="flex gap-4 text-sm text-gray-400 mb-4">
+            {metadata.interviewType && (
+              <span className="capitalize">Type: {metadata.interviewType}</span>
+            )}
+            {metadata.level && (
+              <span>Level: {metadata.level}</span>
+            )}
+            {storedResults.length > 0 && (
+              <span>{storedResults.length} Questions</span>
+            )}
+          </div>
 
           {/* Score Summary */}
           <div className="text-center mb-6">
@@ -249,6 +270,7 @@ function RouteComponent() {
             onClick={() => {
               sessionStorage.removeItem('questionResults')
               sessionStorage.removeItem('completedSessionId')
+              sessionStorage.removeItem('interviewMetadata')
               navigate({ to: '/interview' })
             }}
             className="flex items-center gap-2 bg-white text-black rounded py-3 px-6 font-medium hover:bg-gray-200 transition-colors"
@@ -260,6 +282,7 @@ function RouteComponent() {
             onClick={() => {
               sessionStorage.removeItem('questionResults')
               sessionStorage.removeItem('completedSessionId')
+              sessionStorage.removeItem('interviewMetadata')
               navigate({ to: '/' })
             }}
             className="flex items-center gap-2 border border-white text-white rounded py-3 px-6 font-medium hover:bg-white hover:text-black transition-colors"

@@ -1,12 +1,14 @@
 const API_BASE_URL = "http://localhost:3000";
 
 export type Level = "junior" | "intermediate" | "senior";
+export type InterviewType = "technical" | "behavioral" | "mix";
 
 export interface StartInterviewRequest {
   resume: string;
   jobDescription: string;
   level: Level;
   questionCount: number;
+  interviewType?: InterviewType;
 }
 
 export interface Question {

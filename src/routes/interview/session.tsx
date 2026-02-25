@@ -10,6 +10,8 @@ interface SessionData {
   sessionId: string
   firstQuestion: string
   totalQuestions: number
+  interviewType?: string
+  level?: string
   analysis?: {
     matchScore: number
     strengths: string[]
@@ -103,6 +105,12 @@ function RouteComponent() {
       if (response.done || !response.nextQuestion) {
         // Interview complete - navigate to results page
         sessionStorage.setItem('completedSessionId', sessionId)
+        // Store interview metadata for results page
+        sessionStorage.setItem('interviewMetadata', JSON.stringify({
+          interviewType: sessionData.interviewType,
+          level: sessionData.level,
+          totalQuestions: sessionData.totalQuestions
+        }))
         sessionStorage.removeItem('interviewSession')
         console.log('Interview complete, navigating to results')
         navigate({ to: '/interview/results' })

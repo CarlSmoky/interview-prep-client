@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import { startInterview, type Level } from '../../lib/api/interview'
+import { startInterview, type Level, type InterviewType } from '../../lib/api/interview'
 
 export const Route = createFileRoute('/interview/')({
   component: RouteComponent,
@@ -11,6 +11,7 @@ function RouteComponent() {
   const [resume, setResume] = useState('')
   const [jobDescription, setJobDescription] = useState('')
   const [level, setLevel] = useState('Intermediate')
+  const [interviewType, setInterviewType] = useState('mix')
   const [questions, setQuestions] = useState(6)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -29,6 +30,7 @@ function RouteComponent() {
         jobDescription,
         level: level.toLowerCase() as Level,
         questionCount: questions,
+        interviewType: interviewType as InterviewType,
       })
 
       sessionStorage.setItem('interviewSession', JSON.stringify({
@@ -36,6 +38,8 @@ function RouteComponent() {
         firstQuestion: response.firstQuestion.question,
         totalQuestions: response.questionCount.total,
         analysis: response.analysis,
+        interviewType: interviewType,
+        level: level,
       }))
 
       navigate({ to: '/interview/session' })
@@ -96,6 +100,20 @@ function RouteComponent() {
               <option value="Junior">Junior</option>
               <option value="Intermediate">Intermediate</option>
               <option value="Senior">Senior</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="interviewType" className="block mb-2 text-sm">Interview Type</label>
+            <select
+              id="interviewType"
+              value={interviewType}
+              onChange={(e) => setInterviewType(e.target.value)}
+              className="w-full bg-gray-900 text-white border border-white rounded px-3 py-2 cursor-pointer"
+            >
+              <option value="mix">Mix (Technical & Behavioral)</option>
+              <option value="technical">Technical Only</option>
+              <option value="behavioral">Behavioral Only</option>
             </select>
           </div>
 
