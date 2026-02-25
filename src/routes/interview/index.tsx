@@ -1,25 +1,49 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { startInterview, type Level } from '../../lib/api/interview'
 
 export const Route = createFileRoute('/interview/')({
   component: RouteComponent,
 })
 
-let renderCount = 0
-
 function RouteComponent() {
-  renderCount++
-  console.log('Component rendered, count:', renderCount)
-
   const navigate = useNavigate()
   const [resume, setResume] = useState('')
   const [jobDescription, setJobDescription] = useState('')
   const [level, setLevel] = useState('Intermediate')
   const [questions, setQuestions] = useState(6)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleStartInterview = () => {
-    console.log({ resume, jobDescription, level, questions })
-    navigate({ to: '/interview/session' })
+  const handleStartInterview = async () => {
+    setIsLoading(true)
+    setError('')
+
+    try {
+      // Clear any previous interview data
+      sessionStorage.removeItem('questionResults')
+      sessionStorage.removeItem('completedSessionId')
+
+      const response = await startInterview({
+        resume,
+        jobDescription,
+        level: level.toLowerCase() as Level,
+        questionCount: questions,
+      })
+
+      sessionStorage.setItem('interviewSession', JSON.stringify({
+        sessionId: response.sessionId,
+        firstQuestion: response.firstQuestion.question,
+        totalQuestions: response.questionCount.total,
+        analysis: response.analysis,
+      }))
+
+      navigate({ to: '/interview/session' })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start interview')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -88,11 +112,16 @@ function RouteComponent() {
             />
           </div>
 
+          {error && (
+            <div className="text-red-500 text-sm">{error}</div>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-white text-black rounded py-2 px-4 font-medium hover:bg-gray-200 transition-colors"
+            disabled={isLoading}
+            className="w-full bg-white text-black rounded py-2 px-4 font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Start Interview
+            {isLoading ? 'Starting...' : 'Start Interview'}
           </button>
         </div>
       </form>
