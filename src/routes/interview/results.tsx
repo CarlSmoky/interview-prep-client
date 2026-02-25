@@ -37,8 +37,11 @@ function RouteComponent() {
     const fetchResults = async () => {
       // Load stored results from sessionStorage
       const storedResultsStr = sessionStorage.getItem('questionResults')
+      console.log('Raw questionResults from sessionStorage:', storedResultsStr)
       if (storedResultsStr) {
         const results = JSON.parse(storedResultsStr)
+        console.log('Parsed results:', results)
+        console.log('Number of results:', results.length)
         setStoredResults(results)
       }
 

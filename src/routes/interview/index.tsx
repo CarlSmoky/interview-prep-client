@@ -12,6 +12,7 @@ function RouteComponent() {
   const [jobDescription, setJobDescription] = useState('')
   const [level, setLevel] = useState('Intermediate')
   const [interviewType, setInterviewType] = useState('mix')
+  const [mode, setMode] = useState<'text' | 'voice'>('text')
   const [questions, setQuestions] = useState(6)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -40,6 +41,7 @@ function RouteComponent() {
         analysis: response.analysis,
         interviewType: interviewType,
         level: level,
+        mode: mode,
       }))
 
       navigate({ to: '/interview/session' })
@@ -114,6 +116,19 @@ function RouteComponent() {
               <option value="mix">Mix (Technical & Behavioral)</option>
               <option value="technical">Technical Only</option>
               <option value="behavioral">Behavioral Only</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="mode" className="block mb-2 text-sm">Interview Mode</label>
+            <select
+              id="mode"
+              value={mode}
+              onChange={(e) => setMode(e.target.value as 'text' | 'voice')}
+              className="w-full bg-gray-900 text-white border border-white rounded px-3 py-2 cursor-pointer"
+            >
+              <option value="text">Text Input</option>
+              <option value="voice">Voice Input (Vapi.ai)</option>
             </select>
           </div>
 
