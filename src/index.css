@@ -11,13 +11,4 @@ body,
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden;
-}
-
-.avatar {
-  @apply z-10 flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 text-white text-sm font-bold;
-
-  .animate-speak {
-    @apply absolute inlibe-flex size-5/6 animate-ping rounded-full bg-amber-50 opacity-75;
-  }
 }

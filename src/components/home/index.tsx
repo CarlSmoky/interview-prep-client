@@ -1,6 +1,5 @@
 import { Bot } from 'lucide-react';
 import { dummyInterviews } from '../../data/mockInterviews';
-import InterviewCard from '../InterviewCard';
 
 
 const Home = () => {
@@ -25,9 +24,7 @@ const Home = () => {
             <p>There are no interviews available</p>
           ) : (
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-              {dummyInterviews.map((interview) => (
-                <InterviewCard key={interview.id} {...interview} />
-              ))}
+
             </ul>
           )}
         </div>
