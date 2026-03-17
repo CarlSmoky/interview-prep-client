@@ -39,7 +39,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/interview/results': typeof InterviewResultsRoute
   '/interview/session': typeof InterviewSessionRoute
-  '/interview': typeof InterviewIndexRoute
+  '/interview/': typeof InterviewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -56,7 +56,7 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/interview/results' | '/interview/session' | '/interview'
+  fullPaths: '/' | '/interview/results' | '/interview/session' | '/interview/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/interview/results' | '/interview/session' | '/interview'
   id:
@@ -86,7 +86,7 @@ declare module '@tanstack/react-router' {
     '/interview/': {
       id: '/interview/'
       path: '/interview'
-      fullPath: '/interview'
+      fullPath: '/interview/'
       preLoaderRoute: typeof InterviewIndexRouteImport
       parentRoute: typeof rootRouteImport
     }

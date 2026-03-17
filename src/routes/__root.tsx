@@ -3,8 +3,9 @@ import { AudioLines } from 'lucide-react';
 
 export const Route = createRootRoute({
   component: () => (
-    <div className="min-h-dvh bg-black">
-      <div className="flex gap-2 text-white"> <AudioLines /><span>Ace the Interview + AI</span></div>
+    <div className="min-h-dvh bg-custom-dark">
+      <header className="flex items-center gap-2 text-white font-medium text-3xl"> <AudioLines /><span>Ace the Interview + AI</span>
+      </header>
       <Outlet />
     </div>
   ),

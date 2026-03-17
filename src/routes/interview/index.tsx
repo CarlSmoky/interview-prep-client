@@ -59,36 +59,36 @@ function RouteComponent() {
           e.preventDefault()
           handleStartInterview()
         }}
-        className="w-full max-w-md border border-white rounded-lg p-6 text-white"
+        className="w-full p-6 text-white"
       >
         <div className="mb-6">
           <h1 className="text-2xl font-bold">AI Interview</h1>
-          <p className="text-gray-400">Practice with AI</p>
+          <p className="text-custom-light">Practice with AI</p>
         </div>
 
         <div className="space-y-4">
-          <div>
-            <label htmlFor="resume" className="block mb-2 text-sm">Resume</label>
-            <textarea
-              id="resume"
-              value={resume}
-              onChange={(e) => setResume(e.target.value)}
-              className="w-full h-24 bg-transparent border border-white rounded px-3 py-2 text-white resize-none focus:outline-none focus:ring-2 focus:ring-white"
-              placeholder="Paste your resume here..."
-            />
-          </div>
 
-
-
-          <div>
-            <label htmlFor="jobDescription" className="block mb-2 text-sm">Job Description</label>
-            <textarea
-              id="jobDescription"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="w-full h-24 bg-transparent border border-white rounded px-3 py-2 text-white resize-none focus:outline-none focus:ring-2 focus:ring-white"
-              placeholder="Paste the job description here..."
-            />
+          <div className="flex flex-col lg:flex-row gap-4 w-full">
+            <div className="w-full lg:w-1/2">
+              <label htmlFor="resume" className="block mb-2 text-sm">Resume</label>
+              <textarea
+                id="resume"
+                value={resume}
+                onChange={(e) => setResume(e.target.value)}
+                className="w-full h-40 lg:h-100 bg-custom-light border border-white rounded px-3 py-2 text-custom-dark resize-y focus:outline-none focus:ring-2 focus:ring-custom-accent"
+                placeholder="Paste your resume here..."
+              />
+            </div>
+            <div className="w-full lg:w-1/2">
+              <label htmlFor="jobDescription" className="block mb-2 text-sm">Job Description</label>
+              <textarea
+                id="jobDescription"
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                className="w-full h-40 lg:h-100 bg-custom-light border border-white rounded px-3 py-2 text-custom-dark resize-y focus:outline-none focus:ring-2 focus:ring-custom-accent"
+                placeholder="Paste the job description here..."
+              />
+            </div>
           </div>
 
           <div>
@@ -97,7 +97,7 @@ function RouteComponent() {
               id="level"
               value={level}
               onChange={(e) => setLevel(e.target.value)}
-              className="w-full bg-gray-900 text-white border border-white rounded px-3 py-2 cursor-pointer"
+              className="w-full bg-custom-secondary-dark text-white border border-white rounded px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-custom-accent"
             >
               <option value="Junior">Junior</option>
               <option value="Intermediate">Intermediate</option>
@@ -111,7 +111,7 @@ function RouteComponent() {
               id="interviewType"
               value={interviewType}
               onChange={(e) => setInterviewType(e.target.value)}
-              className="w-full bg-gray-900 text-white border border-white rounded px-3 py-2 cursor-pointer"
+              className="w-full bg-custom-secondary-dark text-white border border-white rounded px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-custom-accent"
             >
               <option value="mix">Mix (Technical & Behavioral)</option>
               <option value="technical">Technical Only</option>
@@ -125,7 +125,7 @@ function RouteComponent() {
               id="mode"
               value={mode}
               onChange={(e) => setMode(e.target.value as 'text' | 'voice')}
-              className="w-full bg-gray-900 text-white border border-white rounded px-3 py-2 cursor-pointer"
+              className="w-full bg-custom-secondary-dark text-white border border-white rounded px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-custom-accent"
             >
               <option value="text">Text Input</option>
               <option value="voice">Voice Input (Vapi.ai)</option>
@@ -141,7 +141,7 @@ function RouteComponent() {
               onChange={(e) => setQuestions(parseInt(e.target.value) || 0)}
               min="1"
               max="20"
-              className="w-full bg-transparent border border-white rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white"
+              className="w-full bg-transparent border border-white rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-custom-accent"
             />
           </div>
 
@@ -152,7 +152,7 @@ function RouteComponent() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-white text-black rounded py-2 px-4 font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-custom-secondary-accent text-black rounded py-2 px-4 font-medium hover:bg-custom-secondary-accent/60 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-custom-accent"
           >
             {isLoading ? 'Starting...' : 'Start Interview'}
           </button>
