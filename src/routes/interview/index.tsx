@@ -22,10 +22,6 @@ function RouteComponent() {
     setError('')
 
     try {
-      // Clear any previous interview data
-      sessionStorage.removeItem('questionResults')
-      sessionStorage.removeItem('completedSessionId')
-
       const response = await startInterview({
         resume,
         jobDescription,
@@ -34,17 +30,18 @@ function RouteComponent() {
         interviewType: interviewType as InterviewType,
       })
 
-      sessionStorage.setItem('interviewSession', JSON.stringify({
-        sessionId: response.sessionId,
-        firstQuestion: response.firstQuestion.question,
-        totalQuestions: response.questionCount.total,
-        analysis: response.analysis,
-        interviewType: interviewType,
-        level: level,
-        mode: mode,
-      }))
-
-      navigate({ to: '/interview/session' })
+      navigate({
+        to: '/interview/session',
+        state: {
+          sessionId: response.sessionId,
+          firstQuestion: response.firstQuestion.question,
+          totalQuestions: response.questionCount.total,
+          analysis: response.analysis,
+          interviewType: interviewType,
+          level: level,
+          mode: mode,
+        } as never,
+      })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to start interview')
     } finally {

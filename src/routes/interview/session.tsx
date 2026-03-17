@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { submitAnswer } from '../../lib/api/interview'
 import { VoiceInput } from '../../components/VoiceInput'
@@ -39,17 +39,10 @@ interface QuestionResult {
 
 function RouteComponent() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [sessionData] = useState<SessionData | null>(() => {
-    const storedData = sessionStorage.getItem('interviewSession')
-    if (!storedData) return null
-
-    const parsed = JSON.parse(storedData)
-    // Handle both old format (object) and new format (string)
-    if (parsed.firstQuestion && typeof parsed.firstQuestion === 'object') {
-      parsed.firstQuestion = parsed.firstQuestion.question
-    }
-    return parsed
+    return (location.state as unknown as SessionData) || null
   })
 
   const [currentQuestion, setCurrentQuestion] = useState(1)
@@ -58,10 +51,9 @@ function RouteComponent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [useSimpleSpeech, setUseSimpleSpeech] = useState(false)
-  const [vapiKey, setVapiKey] = useState('')
-  const [results, setResults] = useState<QuestionResult[]>(() => {
-    const stored = sessionStorage.getItem('questionResults')
-    return stored ? JSON.parse(stored) : []
+  const [results, setResults] = useState<QuestionResult[]>([])
+  const [vapiKey, setVapiKey] = useState(() => {
+    return import.meta.env.VITE_VAPI_PUBLIC_KEY || localStorage.getItem('vapiPublicKey') || ''
   })
 
   const mode = sessionData?.mode || 'text'
@@ -71,10 +63,6 @@ function RouteComponent() {
       console.warn('No session data found, redirecting to interview setup')
       navigate({ to: '/interview' })
     }
-
-    // Load Vapi key from env or localStorage
-    const storedKey = import.meta.env.VITE_VAPI_PUBLIC_KEY || localStorage.getItem('vapiPublicKey') || ''
-    setVapiKey(storedKey)
   }, [sessionData, navigate])
 
   if (!sessionData) {
@@ -116,30 +104,25 @@ function RouteComponent() {
         evaluation: response.evaluation
       }
 
-      // Read the latest results from sessionStorage to ensure we don't lose any
-      const latestStoredStr = sessionStorage.getItem('questionResults')
-      const latestStored = latestStoredStr ? JSON.parse(latestStoredStr) : []
-
-      const updatedResults = [...latestStored, newResult]
+      const updatedResults = [...results, newResult]
       setResults(updatedResults)
-      sessionStorage.setItem('questionResults', JSON.stringify(updatedResults))
       console.log('Stored results count:', updatedResults.length, 'Latest score:', response.evaluation.overallScore)
       console.log('Full stored results:', updatedResults)
-      console.log('SessionStorage now contains:', sessionStorage.getItem('questionResults'))
 
       // Move to next question immediately without showing evaluation
       if (response.done || !response.nextQuestion) {
         // Interview complete - navigate to results page
         console.log('Interview complete, navigating to results')
-        sessionStorage.setItem('completedSessionId', sessionId)
-        // Store interview metadata for results page
-        sessionStorage.setItem('interviewMetadata', JSON.stringify({
-          interviewType: sessionData.interviewType,
-          level: sessionData.level,
-          totalQuestions: sessionData.totalQuestions
-        }))
-        sessionStorage.removeItem('interviewSession')
-        navigate({ to: '/interview/results' })
+        navigate({
+          to: '/interview/results',
+          state: {
+            sessionId,
+            results: updatedResults,
+            interviewType: sessionData.interviewType,
+            level: sessionData.level,
+            totalQuestions: sessionData.totalQuestions
+          } as never,
+        })
       } else {
         // Move to next question
         console.log('Moving to next question:', response.nextQuestion.question)
@@ -184,8 +167,8 @@ function RouteComponent() {
               <button
                 onClick={() => setUseSimpleSpeech(false)}
                 className={`px-4 py-2 rounded text-sm ${!useSimpleSpeech
-                    ? 'bg-white text-black'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-white text-black'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
               >
                 Vapi (Professional)
@@ -193,8 +176,8 @@ function RouteComponent() {
               <button
                 onClick={() => setUseSimpleSpeech(true)}
                 className={`px-4 py-2 rounded text-sm ${useSimpleSpeech
-                    ? 'bg-white text-black'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-white text-black'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
               >
                 Browser Speech (Free)

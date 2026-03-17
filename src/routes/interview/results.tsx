@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { Home, RotateCcw } from 'lucide-react'
 import { finishInterview, type FinalReport } from '../../lib/api/interview'
@@ -23,6 +23,7 @@ interface QuestionResult {
 
 function RouteComponent() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [report, setReport] = useState<FinalReport | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -35,25 +36,29 @@ function RouteComponent() {
 
   useEffect(() => {
     const fetchResults = async () => {
-      // Load stored results from sessionStorage
-      const storedResultsStr = sessionStorage.getItem('questionResults')
-      console.log('Raw questionResults from sessionStorage:', storedResultsStr)
-      if (storedResultsStr) {
-        const results = JSON.parse(storedResultsStr)
-        console.log('Parsed results:', results)
-        console.log('Number of results:', results.length)
-        setStoredResults(results)
-      }
+      // Get data from navigation state
+      const stateData = location.state as {
+        sessionId?: string
+        results?: QuestionResult[]
+        interviewType?: string
+        level?: string
+        totalQuestions?: number
+      } | undefined
 
-      // Load interview metadata
-      const metadataStr = sessionStorage.getItem('interviewMetadata')
-      if (metadataStr) {
-        setMetadata(JSON.parse(metadataStr))
-      }
+      const results = stateData?.results || []
+      const sessionId = stateData?.sessionId
 
-      const sessionId = sessionStorage.getItem('completedSessionId')
+      console.log('Results from navigation state:', results)
+      console.log('Number of results:', results.length)
 
-      if (!sessionId && (!storedResultsStr || storedResultsStr === '[]')) {
+      setStoredResults(results)
+      setMetadata({
+        interviewType: stateData?.interviewType,
+        level: stateData?.level,
+        totalQuestions: stateData?.totalQuestions
+      })
+
+      if (!sessionId && (!results || results.length === 0)) {
         console.warn('No session ID or results found, redirecting to interview setup')
         navigate({ to: '/interview' })
         return
@@ -66,7 +71,6 @@ function RouteComponent() {
           const response = await finishInterview({ sessionId })
           console.log('Received final report:', response)
           setReport(response.finalReport)
-          sessionStorage.removeItem('completedSessionId')
         } catch (err) {
           console.error('Error finishing interview:', err)
           setError(err instanceof Error ? err.message : 'Failed to load AI-generated report')
@@ -99,8 +103,6 @@ function RouteComponent() {
           </p>
           <button
             onClick={() => {
-              sessionStorage.removeItem('completedSessionId')
-              sessionStorage.removeItem('questionResults')
               navigate({ to: '/interview' })
             }}
             className="mt-6 bg-white text-black px-6 py-3 rounded font-medium hover:bg-gray-200"
@@ -271,9 +273,6 @@ function RouteComponent() {
         <div className="flex gap-4 mt-8 justify-center">
           <button
             onClick={() => {
-              sessionStorage.removeItem('questionResults')
-              sessionStorage.removeItem('completedSessionId')
-              sessionStorage.removeItem('interviewMetadata')
               navigate({ to: '/interview' })
             }}
             className="flex items-center gap-2 bg-white text-black rounded py-3 px-6 font-medium hover:bg-gray-200 transition-colors"
@@ -283,9 +282,6 @@ function RouteComponent() {
           </button>
           <button
             onClick={() => {
-              sessionStorage.removeItem('questionResults')
-              sessionStorage.removeItem('completedSessionId')
-              sessionStorage.removeItem('interviewMetadata')
               navigate({ to: '/' })
             }}
             className="flex items-center gap-2 border border-white text-white rounded py-3 px-6 font-medium hover:bg-white hover:text-black transition-colors"
