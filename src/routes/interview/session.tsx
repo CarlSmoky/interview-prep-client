@@ -3,10 +3,13 @@ import { useState, useEffect } from 'react'
 import { submitAnswer } from '../../lib/api/interview'
 import { VoiceInput } from '../../components/VoiceInput'
 import { SimpleSpeechInput } from '../../components/SimpleSpeechInput'
+import { getMockSubmitAnswerResponse, mockDelay } from '../../lib/mock/interviewMock'
 
 export const Route = createFileRoute('/interview/session')({
   component: RouteComponent,
 })
+
+const TEST = import.meta.env.VITE_TEST_MODE === 'true' // Set via .env file
 
 interface SessionData {
   sessionId: string
@@ -86,20 +89,30 @@ function RouteComponent() {
     setError('')
 
     try {
-      console.log('Submitting answer to backend...')
-      const response = await submitAnswer({
-        sessionId,
-        answer: finalAnswer,
-      })
+      let response
+
+      if (TEST) {
+        // MOCK MODE - for styling/development
+        await mockDelay(1000)
+
+        response = getMockSubmitAnswerResponse(currentQuestion - 1, totalQuestions)
+      } else {
+        // PRODUCTION MODE - real API calls
+        console.log('Submitting answer to backend...')
+        response = await submitAnswer({
+          sessionId,
+          answer: finalAnswer,
+        })
+      }
 
       console.log('Backend response:', response)
       console.log('Next question:', response.nextQuestion)
       console.log('Done:', response.done)
 
       // Store the result for this question - use the CURRENT question before updating
-      const currentQuestion = question
+      const answeredQuestion = question
       const newResult: QuestionResult = {
-        question: currentQuestion,  // Store the question that was just answered
+        question: answeredQuestion,  // Store the question that was just answered
         answer: finalAnswer,
         evaluation: response.evaluation
       }

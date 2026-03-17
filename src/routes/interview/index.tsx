@@ -1,10 +1,13 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { startInterview, type Level, type InterviewType } from '../../lib/api/interview'
+import { getMockStartInterviewResponse, mockDelay } from '../../lib/mock/interviewMock'
 
 export const Route = createFileRoute('/interview/')({
   component: RouteComponent,
 })
+
+const TEST = import.meta.env.VITE_TEST_MODE === 'true' // Set via .env file
 
 function RouteComponent() {
   const navigate = useNavigate()
@@ -22,26 +25,62 @@ function RouteComponent() {
     setError('')
 
     try {
-      const response = await startInterview({
-        resume,
-        jobDescription,
-        level: level.toLowerCase() as Level,
-        questionCount: questions,
-        interviewType: interviewType as InterviewType,
-      })
+      if (TEST) {
+        // MOCK MODE - for styling/development
+        await mockDelay(500)
 
-      navigate({
-        to: '/interview/session',
-        state: {
-          sessionId: response.sessionId,
-          firstQuestion: response.firstQuestion.question,
-          totalQuestions: response.questionCount.total,
-          analysis: response.analysis,
-          interviewType: interviewType,
-          level: level,
-          mode: mode,
-        } as never,
-      })
+        const mockResponse = getMockStartInterviewResponse(
+          questions,
+          interviewType,
+          level,
+          mode
+        )
+
+        navigate({
+          to: '/interview/session',
+          state: mockResponse as never,
+        })
+      } else {
+        // PRODUCTION MODE - real API calls
+        try {
+          const response = await startInterview({
+            resume,
+            jobDescription,
+            level: level.toLowerCase() as Level,
+            questionCount: questions,
+            interviewType: interviewType as InterviewType,
+          })
+
+          navigate({
+            to: '/interview/session',
+            state: {
+              sessionId: response.sessionId,
+              firstQuestion: response.firstQuestion.question,
+              totalQuestions: response.questionCount.total,
+              analysis: response.analysis,
+              interviewType: interviewType,
+              level: level,
+              mode: mode,
+            } as never,
+          })
+        } catch (apiError) {
+          // Fallback to mock mode if API fails
+          console.warn('API failed, falling back to mock mode:', apiError)
+          await mockDelay(500)
+
+          const mockResponse = getMockStartInterviewResponse(
+            questions,
+            interviewType,
+            level,
+            mode
+          )
+
+          navigate({
+            to: '/interview/session',
+            state: mockResponse as never,
+          })
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to start interview')
     } finally {
