@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { submitAnswer } from '../../lib/api/interview'
-import { VoiceInput } from '../../components/VoiceInput'
+import { VapiVoiceInput } from '../../components/VapiVoiceInput'
 import { SimpleSpeechInput } from '../../components/SimpleSpeechInput'
 import { getMockSubmitAnswerResponse, mockDelay } from '../../lib/mock/interviewMock'
 
@@ -221,7 +221,7 @@ function RouteComponent() {
                 </p>
               </div>
             ) : (
-              <VoiceInput
+              <VapiVoiceInput
                 question={question}
                 onTranscriptComplete={(transcript) => handleSubmitAnswer(transcript)}
                 isDisabled={isSubmitting}
@@ -231,11 +231,10 @@ function RouteComponent() {
           </>
         ) : (
           /* Text Mode */
-          <>
+          (<>
             <div className="mb-6">
               <p className="text-xl leading-relaxed">{question}</p>
             </div>
-
             <div className="mb-4">
               <label className="block mb-2 text-sm font-medium">Your Answer</label>
               <textarea
@@ -246,7 +245,6 @@ function RouteComponent() {
                 placeholder="Type your answer here..."
               />
             </div>
-
             <button
               onClick={() => handleSubmitAnswer()}
               disabled={isSubmitting || !answer.trim()}
@@ -254,7 +252,7 @@ function RouteComponent() {
             >
               {isSubmitting ? 'Submitting...' : 'Submit Answer'}
             </button>
-          </>
+          </>)
         )}
 
         {error && (
