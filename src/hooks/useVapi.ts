@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Vapi from "@vapi-ai/web";
 
-export function useVapi(apiKey: string) {
+export const useVapi = (apiKey: string) => {
   const vapiRef = useRef<Vapi | null>(null);
   const [isCallActive, setIsCallActive] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -131,4 +131,4 @@ export function useVapi(apiKey: string) {
     assistantSpeaking,
     clearTranscript,
   };
-}
+};

@@ -1,23 +1,28 @@
+import { Eye, EyeOff, Mic, MicOff, Send } from 'lucide-react'
 import { useVapi } from '../hooks/useVapi'
 
 interface VapiVoiceInputProps {
   question: string
+  showQuestion?: boolean
+  setShowQuestion?: (show: boolean) => void
   onTranscriptComplete: (transcript: string) => void
   isDisabled?: boolean
   vapiPublicKey: string
+  isLastQuestion?: boolean
 }
 
 export function VapiVoiceInput({
   question,
+  showQuestion,
+  setShowQuestion,
   onTranscriptComplete,
   isDisabled = false,
-  vapiPublicKey
+  vapiPublicKey,
+  isLastQuestion = false,
 }: VapiVoiceInputProps) {
   const { start, stop, isCallActive, transcript, isSpeaking, assistantSpeaking, clearTranscript } = useVapi(vapiPublicKey)
 
   const handleStart = () => {
-    console.log('Start button clicked, question:', question);
-    console.log('Vapi public key:', vapiPublicKey);
     clearTranscript()
     start(question)
   }
@@ -35,28 +40,37 @@ export function VapiVoiceInput({
 
   return (
     <div className="space-y-4">
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <p className="font-semibold text-gray-700 mb-2">Question:</p>
-        <p className="text-gray-900">{question}</p>
+      <div className="rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <button
+            onClick={() => setShowQuestion?.(!showQuestion)}
+            className="flex gap-2 items-center text-sm text-custom-dark font-medium hover:text-custom-dark/60 transition-colors bg-white rounded-full px-3 py-1 focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            {showQuestion ? <EyeOff /> : <Eye />} {showQuestion ? 'Hide Question' : 'Show Question'}
+          </button>
+        </div>
+        {showQuestion && (
+          <p className="text-xl leading-relaxed">{question}</p>
+        )}
       </div>
 
-      <div className="bg-white p-6 rounded-lg border border-gray-200 space-y-4">
-        <div className="flex gap-3">
+      <div className="bg-custom-light p-4 rounded-lg border border-gray-200 space-y-4">
+        <div className="flex  gap-3">
           {!isCallActive ? (
             <button
               onClick={handleStart}
               disabled={isDisabled}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="flex gap-4 px-4 items-center w-40 h-12 bg-custom-dark text-white rounded-lg hover:bg-custom-dark/60 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              🎤 Start Question
+              <Mic /> {transcript ? 'Re-record' : 'Start'}
             </button>
           ) : (
             <button
               onClick={handleStop}
               disabled={isDisabled}
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="flex gap-4 px-4 items-center w-40 h-12 bg-custom-dark text-white rounded-lg hover:bg-custom-dark/60 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              ⏹️ Stop Question
+              <MicOff /> Stop
             </button>
           )}
 
@@ -64,9 +78,9 @@ export function VapiVoiceInput({
             <button
               onClick={handleSubmit}
               disabled={isDisabled}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="flex gap-4 px-4 items-center w-50 h-12 bg-custom-dark text-white rounded-lg hover:bg-custom-dark/60 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              ✓ Submit Answer
+              <Send /> {isLastQuestion ? 'Submit Answer' : 'Submit & Next'}
             </button>
           )}
         </div>
@@ -74,7 +88,7 @@ export function VapiVoiceInput({
         {isCallActive && assistantSpeaking && (
           <div className="flex items-center gap-2 text-purple-600">
             <div className="w-3 h-3 bg-purple-600 rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium">Vapi is speaking...</span>
+            <span className="text-sm font-medium">AI interviewer is speaking...</span>
           </div>
         )}
 
@@ -101,7 +115,7 @@ export function VapiVoiceInput({
 
         {!transcript && !isCallActive && (
           <p className="text-gray-500 text-sm">
-            Click "Start Recording" and Vapi will ask you the question - then speak your answer
+            Click "Start" and the AI interviewer will ask the question. Then speak your answer out loud.
           </p>
         )}
       </div>

@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
+import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
+import { Mic, Keyboard, EyeOff, Eye } from 'lucide-react'
 import { submitAnswer } from '../../lib/api/interview'
 import { VapiVoiceInput } from '../../components/VapiVoiceInput'
-import { SimpleSpeechInput } from '../../components/SimpleSpeechInput'
 import { getMockSubmitAnswerResponse, mockDelay } from '../../lib/mock/interviewMock'
 
 export const Route = createFileRoute('/interview/session')({
@@ -51,9 +51,9 @@ function RouteComponent() {
   const [currentQuestion, setCurrentQuestion] = useState(1)
   const [answer, setAnswer] = useState('')
   const [question, setQuestion] = useState(sessionData?.firstQuestion || '')
+  const [showQuestion, setShowQuestion] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const [useSimpleSpeech, setUseSimpleSpeech] = useState(false)
   const [results, setResults] = useState<QuestionResult[]>([])
   const [vapiKey, setVapiKey] = useState(() => {
     return import.meta.env.VITE_VAPI_PUBLIC_KEY || localStorage.getItem('vapiPublicKey') || ''
@@ -142,6 +142,7 @@ function RouteComponent() {
         setQuestion(response.nextQuestion.question)
         setCurrentQuestion(prev => prev + 1)
         setAnswer('')
+        setShowQuestion(false)
       }
       setIsSubmitting(false)
     } catch (err) {
@@ -159,7 +160,7 @@ function RouteComponent() {
           <h2 className="text-lg font-semibold mb-2">
             Question {currentQuestion} of {totalQuestions}
           </h2>
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-custom-light/20 rounded-full h-2">
             <div
               className="bg-white h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -168,72 +169,36 @@ function RouteComponent() {
         </div>
 
         {/* Mode Indicator */}
-        <div className="mb-4 text-sm text-gray-400 text-center">
-          Mode: {mode === 'voice' ? '🎤 Voice' : '⌨️ Text'}
+        <div className="mb-4 text-sm text-gray-400 text-center flex items-center justify-center gap-1">
+          Mode: {mode === 'voice' ? <><Mic className="inline-block w-4 h-4" /> Voice</> : <><Keyboard className="inline-block w-4 h-4" /> Text</>}
         </div>
 
         {/* Voice Mode */}
         {mode === 'voice' ? (
-          <>
-            {/* Voice Provider Toggle */}
-            <div className="mb-4 flex gap-2 justify-center">
-              <button
-                onClick={() => setUseSimpleSpeech(false)}
-                className={`px-4 py-2 rounded text-sm ${!useSimpleSpeech
-                  ? 'bg-white text-black'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-              >
-                Vapi (Professional)
-              </button>
-              <button
-                onClick={() => setUseSimpleSpeech(true)}
-                className={`px-4 py-2 rounded text-sm ${useSimpleSpeech
-                  ? 'bg-white text-black'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-              >
-                Browser Speech (Free)
-              </button>
-            </div>
-
-            {useSimpleSpeech ? (
-              <SimpleSpeechInput
-                question={question}
-                onTranscriptComplete={(transcript) => handleSubmitAnswer(transcript)}
-                isDisabled={isSubmitting}
-              />
-            ) : !vapiKey ? (
-              <div className="mb-4 p-4 bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded">
-                <p className="text-sm text-yellow-400 mb-2">Vapi API Key Required</p>
-                <input
-                  type="text"
-                  value={vapiKey}
-                  onChange={(e) => {
-                    setVapiKey(e.target.value)
-                    localStorage.setItem('vapiPublicKey', e.target.value)
-                  }}
-                  placeholder="Enter your Vapi Public Key"
-                  className="w-full bg-transparent border border-yellow-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-                <p className="text-xs text-gray-400 mt-2">
-                  Get your key from <a href="https://vapi.ai" target="_blank" rel="noopener noreferrer" className="underline">vapi.ai</a>
-                </p>
-              </div>
-            ) : (
-              <VapiVoiceInput
-                question={question}
-                onTranscriptComplete={(transcript) => handleSubmitAnswer(transcript)}
-                isDisabled={isSubmitting}
-                vapiPublicKey={vapiKey}
-              />
-            )}
-          </>
+          <VapiVoiceInput
+            question={question}
+            showQuestion={showQuestion}
+            setShowQuestion={setShowQuestion}
+            onTranscriptComplete={(transcript) => handleSubmitAnswer(transcript)}
+            isDisabled={isSubmitting}
+            vapiPublicKey={vapiKey}
+          />
         ) : (
           /* Text Mode */
           (<>
             <div className="mb-6">
-              <p className="text-xl leading-relaxed">{question}</p>
+              <div className="flex items-center justify-between mb-2">
+                <button
+                  onClick={() => setShowQuestion(!showQuestion)}
+                  className="flex gap-2 items-center text-sm text-gray-400 hover:text-custom-dark transition-colors bg-white rounded-full px-3 py-1 focus:outline-none focus:ring-2 focus:ring-white"
+                >
+                  {showQuestion ? <EyeOff /> : <Eye />} {showQuestion ? 'Hide Question' : 'Show Question'}
+                </button>
+              </div>
+              {showQuestion && (
+                <p className="text-xl leading-relaxed">{question}</p>
+              )}
+
             </div>
             <div className="mb-4">
               <label className="block mb-2 text-sm font-medium">Your Answer</label>
@@ -259,6 +224,6 @@ function RouteComponent() {
           <div className="text-red-500 text-sm mb-4 mt-4">{error}</div>
         )}
       </div>
-    </div>
+    </div >
   )
 }

@@ -1,10 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&family=Roboto:wght@100;300;400;500&display=swap");
 @import "tailwindcss";
+
 @theme {
   --color-custom-dark: #28262c;
   --color-custom-secondary-dark: #001514;
   --color-custom-light: #dce1e9;
   --color-custom-accent: #e6f14a;
   --color-custom-secondary-accent: #bd93bd;
+  --color-custom-red: #a72608;
+
+  --font-heading: Roboto, sans-serif;
+  --font-body: Poppins, sans-serif;
 }
 
 * {

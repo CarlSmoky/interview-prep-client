@@ -18,6 +18,7 @@ interface QuestionResult {
     overallScore: number
     feedback: string
     improvementSuggestions?: string[]
+    sampleAnswer?: string
   }
 }
 
@@ -28,6 +29,7 @@ function RouteComponent() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [storedResults, setStoredResults] = useState<QuestionResult[]>([])
+  const [visibleSampleAnswers, setVisibleSampleAnswers] = useState<Record<number, boolean>>({})
   const [metadata, setMetadata] = useState<{
     interviewType?: string
     level?: string
@@ -84,6 +86,10 @@ function RouteComponent() {
     fetchResults()
   }, [navigate])
 
+  const toggleSampleAnswerVisibility = (index: number) => {
+    setVisibleSampleAnswers(prev => ({ ...prev, [index]: !prev[index] }))
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
@@ -136,7 +142,13 @@ function RouteComponent() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="border border-white rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold mb-2">Interview Complete!</h1>
+          <h1 className="text-3xl font-heading font-bold mb-2">Over all score</h1>
+
+
+          {/* Score Summary */}
+          <div className="text-center mb-6">
+            <div className="text-5xl font-bold text-white mb-2">{overallScore}%</div>
+          </div>
           <div className="flex gap-4 text-sm text-gray-400 mb-4">
             {metadata.interviewType && (
               <span className="capitalize">Type: {metadata.interviewType}</span>
@@ -147,14 +159,6 @@ function RouteComponent() {
             {storedResults.length > 0 && (
               <span>{storedResults.length} Questions</span>
             )}
-          </div>
-
-          {/* Score Summary */}
-          <div className="text-center mb-6">
-            <div className="text-5xl font-bold text-white mb-2">{overallScore}%</div>
-            <div className="text-lg text-gray-400">
-              Overall Score {storedResults.length > 0 && `(from ${storedResults.length} questions)`}
-            </div>
           </div>
 
           {/* AI Report Strengths & Weaknesses (if available) */}
@@ -173,7 +177,7 @@ function RouteComponent() {
 
               {report.weaknesses.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-red-400 mb-2">✗ Areas for Improvement</h3>
+                  <h3 className="font-semibold text-custom-red mb-2">✗ Areas for Improvement</h3>
                   <ul className="space-y-1">
                     {report.weaknesses.map((weakness, index) => (
                       <li key={index} className="text-sm text-gray-300">• {weakness}</li>
@@ -201,21 +205,19 @@ function RouteComponent() {
 
         {/* Error message if AI report failed */}
         {error && (
-          <div className="border border-yellow-500 rounded-lg p-6 mb-6 bg-yellow-900 bg-opacity-20">
-            <h3 className="text-yellow-400 font-semibold mb-2">⚠️ AI Report Unavailable</h3>
-            <p className="text-sm text-gray-300 mb-2">{error}</p>
-            <p className="text-xs text-gray-400">Showing per-question feedback below.</p>
+          <div className="">
+            <h3 className="text-custom-red mb-2">AI Report Unavailable</h3>
           </div>
         )}
 
         {/* Detailed Question Results */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">Question-by-Question Breakdown</h2>
+          <h2 className="text-xl font-semibold mb-4">Detailed Feedback</h2>
           {storedResults.map((result, index) => (
             <div key={index} className="border border-white rounded-lg p-6">
               <div className="flex justify-between items-start mb-3">
                 <h3 className="font-semibold text-lg">Question {index + 1}</h3>
-                <span className={`font-bold text-xl ${result.evaluation.overallScore >= 70 ? 'text-green-400' : result.evaluation.overallScore >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                <span className={`font-bold text-xl text-white`}>
                   {result.evaluation.overallScore}/100
                 </span>
               </div>
@@ -224,10 +226,12 @@ function RouteComponent() {
                 <p className="text-gray-300 italic">"{result.question}"</p>
               </div>
 
-              <div className="mb-4 p-3 bg-gray-800 bg-opacity-50 rounded">
+              <div className="mb-4 p-3 bg-custom-light bg-opacity-50 rounded">
                 <p className="text-sm text-gray-400 mb-1">Your Answer:</p>
-                <p className="text-gray-200">{result.answer}</p>
+                <p className="text-custom-secondary-dark">{result.answer}</p>
               </div>
+
+
 
               <div className={`grid ${result.evaluation.seniorityAlignment !== undefined ? 'grid-cols-4' : 'grid-cols-3'} gap-3 mb-4`}>
                 <div className="text-center">
@@ -265,8 +269,25 @@ function RouteComponent() {
                   </div>
                 )}
               </div>
+              {result.evaluation.sampleAnswer && (
+                <div className="my-4 p-3bg-opacity-20">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm text-custom-secondary-accent font-semibold">Sample Answer</p>
+                    <button
+                      onClick={() => toggleSampleAnswerVisibility(index)}
+                      className="text-xs text-custom-secondary-accent hover:text-custom-secondary-accent/50 underline"
+                    >
+                      {visibleSampleAnswers[index] ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
+                  {visibleSampleAnswers[index] && (
+                    <p className="text-gray-200 text-sm leading-relaxed">{result.evaluation.sampleAnswer}</p>
+                  )}
+                </div>
+              )}
             </div>
           ))}
+
         </div>
 
         {/* Action Buttons */}

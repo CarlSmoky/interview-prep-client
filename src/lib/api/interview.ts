@@ -54,6 +54,7 @@ export interface Evaluation {
   overallScore: number;
   feedback: string;
   improvementSuggestions?: string[];
+  sampleAnswer?: string;
 }
 
 export interface SubmitAnswerResponse {

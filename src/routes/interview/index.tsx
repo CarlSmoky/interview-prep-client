@@ -164,7 +164,7 @@ function RouteComponent() {
               className="w-full bg-custom-secondary-dark text-white border border-white rounded px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-custom-accent"
             >
               <option value="text">Text Input</option>
-              <option value="voice">Voice Input (Vapi.ai)</option>
+              <option value="voice">Voice Input</option>
             </select>
           </div>
 
