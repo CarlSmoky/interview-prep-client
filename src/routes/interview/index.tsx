@@ -35,7 +35,7 @@ function RouteComponent() {
   const [jobDescription, setJobDescription] = useState('')
   const [level, setLevel] = useState('Intermediate')
   const [interviewType, setInterviewType] = useState('mix')
-  const [mode, setMode] = useState<'text' | 'voice'>('text')
+  const [mode, setMode] = useState<'text' | 'voice'>('voice')
   const [questions, setQuestions] = useState(6)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')

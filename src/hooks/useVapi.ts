@@ -97,16 +97,16 @@ export const useVapi = (apiKey: string) => {
             {
               role: "system",
               content: `You are a question reader for an interview practice app. Your role is ONLY to:
-1. Read the interview question out loud clearly
-2. Then stay completely silent and listen
+              1. Read the interview question out loud clearly
+              2. Then stay completely silent and listen
 
-DO NOT:
-- Ask follow-up questions
-- Ask them to elaborate
-- Encourage or comment on their answer
-- Speak again after asking the question (unless they ask you to repeat it)
+              DO NOT:
+              - Ask follow-up questions
+              - Ask them to elaborate
+              - Encourage or comment on their answer
+              - Speak again after asking the question (unless they ask you to repeat it)
 
-The candidate will speak their answer, and when they're done, they will press the "Submit" button themselves. Your job is finished after reading the question.`,
+              The candidate will speak their answer, and when they're done, they will press the "Submit" button themselves. Your job is finished after reading the question.`,
             },
           ],
         },
