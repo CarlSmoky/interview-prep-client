@@ -81,7 +81,11 @@ function RouteComponent() {
         results: updatedResults,
         interviewType: sessionData.interviewType,
         level: sessionData.level,
-        totalQuestions: sessionData.totalQuestions
+        totalQuestions: sessionData.totalQuestions,
+        resume: sessionData.resume,
+        jobDescription: sessionData.jobDescription,
+        companyName: sessionData.companyName,
+        jobTitle: sessionData.jobTitle,
       } as never,
     })
   }

@@ -20,6 +20,10 @@ export interface SessionData {
   interviewType?: string;
   level?: string;
   mode?: "text" | "voice";
+  resume?: string;
+  jobDescription?: string;
+  companyName?: string;
+  jobTitle?: string;
   analysis?: {
     matchScore: number;
     strengths: string[];
@@ -32,4 +36,8 @@ export interface InterviewMetadata {
   interviewType?: string;
   level?: string;
   totalQuestions?: number;
+  resume?: string;
+  jobDescription?: string;
+  companyName?: string;
+  jobTitle?: string;
 }

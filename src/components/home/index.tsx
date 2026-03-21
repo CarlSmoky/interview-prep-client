@@ -47,7 +47,7 @@ const Home = () => {
               ))}
             </ul>
 
-            <Link to="/interview" className="mt-4 h-16 w-64 bg-white text-black rounded-full flex items-center justify-center">Get Started</Link>
+            <Link to="/interview" className="mt-4 h-16 w-64 bg-white text-black rounded-full flex items-center justify-center font-medium">Get Started</Link>
           </div>
 
 

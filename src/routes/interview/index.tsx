@@ -6,6 +6,7 @@ import FormTextarea from '../../components/FormTextarea'
 import FormSelect from '../../components/FormSelect'
 import FormNumberInput from '../../components/FormNumberInput'
 import FormButton from '../../components/FormButton'
+import FormInput from '../../components/FormInput'
 
 export const Route = createFileRoute('/interview/')({
   component: RouteComponent,
@@ -33,12 +34,15 @@ function RouteComponent() {
   const navigate = useNavigate()
   const [resume, setResume] = useState('')
   const [jobDescription, setJobDescription] = useState('')
+  const [companyName, setCompanyName] = useState('')
+  const [jobTitle, setJobTitle] = useState('')
   const [level, setLevel] = useState('Intermediate')
   const [interviewType, setInterviewType] = useState('mix')
   const [mode, setMode] = useState<'text' | 'voice'>('voice')
-  const [questions, setQuestions] = useState(6)
+  const [questions, setQuestions] = useState(3)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isFormValid, setIsFormValid] = useState(true)
 
   const navigateToSession = (response: any) => {
     navigate({
@@ -49,7 +53,13 @@ function RouteComponent() {
 
   const getMockResponse = async () => {
     await mockDelay(500)
-    return getMockStartInterviewResponse(questions, interviewType, level, mode)
+    return {
+      ...getMockStartInterviewResponse(questions, interviewType, level, mode),
+      resume,
+      jobDescription,
+      companyName,
+      jobTitle,
+    }
   }
 
   const getProductionResponse = async () => {
@@ -69,10 +79,22 @@ function RouteComponent() {
       interviewType: interviewType,
       level: level,
       mode: mode,
+      resume,
+      jobDescription,
+      companyName,
+      jobTitle,
     }
   }
 
   const handleStartInterview = async () => {
+    // Validate form
+    const valid = resume.trim() !== '' && jobDescription.trim() !== '' && questions >= 1 && questions <= 10
+    setIsFormValid(valid)
+    
+    if (!valid) {
+      return
+    }
+
     setIsLoading(true)
     setError('')
 
@@ -118,17 +140,34 @@ function RouteComponent() {
           <div className="flex flex-col lg:flex-row gap-4 w-full">
             <FormTextarea
               id="resume"
-              label="Resume"
+              label="Resume *"
               value={resume}
               onChange={setResume}
               placeholder="Paste your resume here..."
             />
             <FormTextarea
               id="jobDescription"
-              label="Job Description"
+              label="Job Description *"
               value={jobDescription}
               onChange={setJobDescription}
               placeholder="Paste the job description here..."
+            />
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-4 w-full">
+            <FormInput
+              id="companyName"
+              label="Company Name"
+              value={companyName}
+              onChange={setCompanyName}
+              placeholder="Input company name"
+            />
+            <FormInput
+              id="jobTitle"
+              label="Job Title"
+              value={jobTitle}
+              onChange={setJobTitle}
+              placeholder="Input job title"
             />
           </div>
 
@@ -167,6 +206,12 @@ function RouteComponent() {
 
           {error && (
             <div className="text-red-500 text-sm">{error}</div>
+          )}
+
+          {!isFormValid && (
+            <div className="text-red-500 text-sm">
+              Please provide Resume, Job Description.
+            </div>
           )}
 
           <FormButton

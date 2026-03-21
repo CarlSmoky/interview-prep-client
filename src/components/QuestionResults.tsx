@@ -69,12 +69,12 @@ const QuestionResults = ({ results }: QuestionResultsProps) => {
           </div>
 
           <div className="border-t border-gray-700 pt-3">
-            <p className="text-sm text-gray-400 mb-2">Feedback:</p>
+            <p className="font-heading text-base text-white mb-2">Feedback:</p>
             <p className="text-gray-300">{result.evaluation.feedback}</p>
 
             {result.evaluation.improvementSuggestions && result.evaluation.improvementSuggestions.length > 0 && (
               <div className="mt-3">
-                <p className="text-sm text-gray-400 mb-2">Improvement Suggestions:</p>
+                <p className="font-heading text-base text-white mb-2">Improvement Suggestions:</p>
                 <ul className="space-y-1">
                   {result.evaluation.improvementSuggestions.map((suggestion, idx) => (
                     <li key={idx} className="text-sm text-gray-300">• {suggestion}</li>
@@ -85,9 +85,9 @@ const QuestionResults = ({ results }: QuestionResultsProps) => {
           </div>
 
           {result.evaluation.sampleAnswer && (
-            <div className="my-4 p-3bg-opacity-20">
+            <div className="my-4 bg-opacity-20">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-custom-secondary-accent font-semibold">Sample Answer</p>
+                <p className="font-headig text-base text-white">Sample Answer</p>
                 <button
                   onClick={() => toggleSampleAnswerVisibility(index)}
                   className="text-xs text-custom-secondary-accent hover:text-custom-secondary-accent/50 underline"

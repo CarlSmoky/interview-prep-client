@@ -9,7 +9,7 @@ const ScoreCircle = ({
   score,
   size = 160,
   strokeWidth = 8,
-  label = "Overall Performance"
+  label = ""
 }: ScoreCircleProps) => {
   const radius = (size / 2) - strokeWidth
   const circumference = 2 * Math.PI * radius
@@ -43,8 +43,8 @@ const ScoreCircle = ({
             strokeDasharray={circumference}
             strokeDashoffset={circumference * (1 - score / 100)}
             className={`transition-all duration-1000 ${score >= 70 ? 'text-green-400' :
-                score >= 50 ? 'text-yellow-400' :
-                  'text-red-400'
+              score >= 50 ? 'text-yellow-400' :
+                'text-red-400'
               }`}
             strokeLinecap="round"
           />

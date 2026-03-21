@@ -2,6 +2,7 @@ interface FormButtonProps {
   text: string
   loadingText?: string
   isLoading?: boolean
+  disabled?: boolean
   type?: 'submit' | 'button'
   onClick?: () => void
   className?: string
@@ -11,6 +12,7 @@ const FormButton = ({
   text,
   loadingText = 'Loading...',
   isLoading = false,
+  disabled = false,
   type = 'submit',
   onClick,
   className
@@ -20,7 +22,7 @@ const FormButton = ({
   return (
     <button
       type={type}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
       onClick={onClick}
       className={className || defaultClassName}
     >

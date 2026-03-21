@@ -8,6 +8,7 @@ import AIRecommendations from '../../components/AIRecommendations'
 import ResultsHeader from '../../components/ResultsHeader'
 import NoResultsFound from '../../components/NoResultsFound'
 import { calculateOverallScore } from '../../lib/utils/calculateOverallScore'
+import { downloadAsCSV, downloadAsText, downloadAsPDF } from '../../lib/utils/downloadResults'
 import LoadingResults from '../../components/LoadingResults'
 import type { InterviewMetadata, QuestionResult } from '../../type/interview'
 
@@ -31,6 +32,10 @@ function RouteComponent() {
       interviewType?: string
       level?: string
       totalQuestions?: number
+      resume?: string
+      jobDescription?: string
+      companyName?: string
+      jobTitle?: string
     } | undefined
 
     return {
@@ -39,7 +44,11 @@ function RouteComponent() {
       metadata: {
         interviewType: stateData?.interviewType,
         level: stateData?.level,
-        totalQuestions: stateData?.totalQuestions
+        totalQuestions: stateData?.totalQuestions,
+        resume: stateData?.resume,
+        jobDescription: stateData?.jobDescription,
+        companyName: stateData?.companyName,
+        jobTitle: stateData?.jobTitle,
       }
     }
   }
@@ -52,7 +61,8 @@ function RouteComponent() {
       return response.finalReport
     } catch (err) {
       console.error('Error finishing interview:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load AI-generated report')
+      // Don't set error state - final report is optional if we have results
+      console.warn('Continuing without AI-generated report')
       return null
     }
   }
@@ -97,6 +107,25 @@ function RouteComponent() {
 
   const overallScore = calculateOverallScore(storedResults, report)
 
+  const handleDownload = (format: 'csv' | 'text' | 'pdf') => {
+    const downloadData = {
+      overallScore,
+      metadata,
+      results: storedResults,
+      strengths: report?.strengths,
+      weaknesses: report?.weaknesses,
+      recommendations: report?.recommendations,
+    }
+
+    if (format === 'csv') {
+      downloadAsCSV(downloadData)
+    } else if (format === 'pdf') {
+      downloadAsPDF(downloadData)
+    } else {
+      downloadAsText(downloadData)
+    }
+  }
+
   return (
     <div className="min-h-screen p-6 text-white overflow-auto">
       <div className="max-w-4xl mx-auto">
@@ -117,7 +146,11 @@ function RouteComponent() {
 
         <ResultsActions
           onRetryInterview={() => navigate({ to: '/interview' })}
-          onGoHome={() => navigate({ to: '/' })}
+          onGoHome={() => {
+            console.log('Navigating to home page')
+            window.location.href = '/'
+          }}
+          onDownload={handleDownload}
         />
       </div>
     </div>
