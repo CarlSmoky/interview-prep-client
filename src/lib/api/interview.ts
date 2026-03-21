@@ -152,3 +152,49 @@ export async function finishInterview(
 
   return response.json();
 }
+
+export interface QuestionWithAnswer {
+  question: string;
+  focusArea: string;
+  expectedTopics: string[];
+  sampleAnswer: string;
+  type: string;
+}
+
+export interface GenerateQuestionsRequest {
+  resume: string;
+  jobDescription: string;
+  level: Level;
+  questionCount: number;
+  interviewType?: InterviewType;
+}
+
+export interface GenerateQuestionsResponse {
+  success: boolean;
+  questions: QuestionWithAnswer[];
+  analysis: Analysis;
+  error?: string;
+  details?: string;
+}
+
+export async function generateQuestions(
+  data: GenerateQuestionsRequest,
+): Promise<GenerateQuestionsResponse> {
+  const response = await fetch(`${API_BASE_URL}/interview/generate-questions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(
+      result.error || result.details || "Failed to generate questions",
+    );
+  }
+
+  return result;
+}

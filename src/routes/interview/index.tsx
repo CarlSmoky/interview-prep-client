@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import { startInterview, type Level, type InterviewType } from '../../lib/api/interview'
+import { startInterview, generateQuestions, type Level, type InterviewType } from '../../lib/api/interview'
 import { getMockStartInterviewResponse, mockDelay } from '../../lib/mock/interviewMock'
 import FormTextarea from '../../components/FormTextarea'
 import FormSelect from '../../components/FormSelect'
@@ -42,6 +42,7 @@ function RouteComponent() {
   const [mode, setMode] = useState<'text' | 'voice'>('voice')
   const [questions, setQuestions] = useState(3)
   const [isLoading, setIsLoading] = useState(false)
+  const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false)
   const [error, setError] = useState('')
   const [isFormValid, setIsFormValid] = useState(true)
 
@@ -144,6 +145,47 @@ function RouteComponent() {
       setError(err instanceof Error ? err.message : 'Failed to start interview')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleViewQuestions = async () => {
+    // Validate form
+    const valid = resume.trim() !== '' && jobDescription.trim() !== '' && questions >= 1 && questions <= 10
+    setIsFormValid(valid)
+
+    if (!valid) {
+      return
+    }
+
+    setIsGeneratingQuestions(true)
+    setError('')
+
+    try {
+      const response = await generateQuestions({
+        resume,
+        jobDescription,
+        level: level.toLowerCase() as Level,
+        questionCount: questions,
+        interviewType: interviewType as InterviewType,
+      })
+
+      navigate({
+        to: '/interview/questions',
+        state: {
+          questions: response.questions,
+          analysis: response.analysis,
+          resume,
+          jobDescription,
+          companyName,
+          jobTitle,
+          level,
+          interviewType,
+        } as never,
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate questions')
+    } finally {
+      setIsGeneratingQuestions(false)
     }
   }
 
@@ -254,12 +296,21 @@ function RouteComponent() {
             </div>
           )}
 
-          <FormButton
-            text="Start Interview"
-            loadingText="Starting..."
-            isLoading={isLoading}
-            type="submit"
-          />
+          <div className="flex flex-col sm:flex-row gap-3">
+            <FormButton
+              text="View Sample Questions"
+              loadingText="Generating..."
+              isLoading={isGeneratingQuestions}
+              type="button"
+              onClick={handleViewQuestions}
+            />
+            <FormButton
+              text="Start Interview"
+              loadingText="Starting..."
+              isLoading={isLoading}
+              type="submit"
+            />
+          </div>
         </div>
       </form>
     </div>
