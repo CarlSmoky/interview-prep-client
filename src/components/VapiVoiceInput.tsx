@@ -80,7 +80,7 @@ export function VapiVoiceInput({
               disabled={isDisabled}
               className="flex gap-4 px-4 items-center w-50 h-12 bg-custom-dark text-white rounded-lg hover:bg-custom-dark/60 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              <Send /> {isLastQuestion ? 'Submit Answer' : 'Submit & Next'}
+              <Send /> {isLastQuestion ? 'Submit Answer' : 'Next'}
             </button>
           )}
         </div>
