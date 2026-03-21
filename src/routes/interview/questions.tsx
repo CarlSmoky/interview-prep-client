@@ -45,7 +45,7 @@ function RouteComponent() {
 
   const handleDownload = () => {
     let content = `Interview Preparation Guide\n\n`
-    
+
     if (companyName) {
       content += `Company: ${companyName}\n`
     }
@@ -59,15 +59,15 @@ function RouteComponent() {
     if (analysis) {
       content += `RESUME ANALYSIS\n\n`
       content += `Match Score: ${analysis.matchScore}%\n\n`
-      
+
       if (analysis.strengths?.length > 0) {
         content += `Strengths:\n${analysis.strengths.map(s => `• ${s}`).join('\n')}\n\n`
       }
-      
+
       if (analysis.missingSkills?.length > 0) {
         content += `Areas to Prepare:\n${analysis.missingSkills.map(s => `• ${s}`).join('\n')}\n\n`
       }
-      
+
       content += `${'='.repeat(80)}\n\n`
     }
 
@@ -104,7 +104,7 @@ function RouteComponent() {
             <ArrowLeft size={20} />
             <span>Back to Setup</span>
           </button>
-          
+
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold mb-2">Interview Preparation Guide</h1>
@@ -117,7 +117,7 @@ function RouteComponent() {
                 {level} Level • {interviewType} Interview • {questions.length} Questions
               </p>
             </div>
-            
+
             <button
               onClick={handleDownload}
               className="flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full hover:bg-gray-200 transition-colors"
@@ -132,7 +132,7 @@ function RouteComponent() {
         {analysis && (
           <div className="mb-8 p-6 bg-white/5 rounded-lg border border-white/10">
             <h2 className="text-xl font-bold mb-4">Resume Analysis</h2>
-            
+
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm">Match Score</span>
@@ -173,7 +173,7 @@ function RouteComponent() {
         {/* Questions Section */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold mb-4">Interview Questions & Sample Answers</h2>
-          
+
           {questions.map((question, index) => (
             <div
               key={index}
@@ -201,7 +201,7 @@ function RouteComponent() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="shrink-0">
                   {expandedIndex === index ? (
                     <ChevronUp size={24} />
