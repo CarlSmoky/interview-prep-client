@@ -7,6 +7,7 @@ import FormSelect from '../../components/FormSelect'
 import FormNumberInput from '../../components/FormNumberInput'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
+import { extractTextFromPDF, readTextFile } from '../../lib/utils/fileReader'
 
 export const Route = createFileRoute('/interview/')({
   component: RouteComponent,
@@ -43,6 +44,31 @@ function RouteComponent() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [isFormValid, setIsFormValid] = useState(true)
+
+  const handleResumeFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      console.log('Reading file:', file.name)
+      let text: string
+
+      if (file.type === 'application/pdf') {
+        const arrayBuffer = await file.arrayBuffer()
+        text = await extractTextFromPDF(arrayBuffer)
+      } else {
+        text = await readTextFile(file)
+      }
+
+      setResume(text)
+    } catch (error) {
+      console.error('Error reading file:', error)
+      setError('Failed to read file. Please try again or paste the content manually.')
+    } finally {
+      // Reset file input
+      event.target.value = ''
+    }
+  }
 
   const navigateToSession = (response: any) => {
     navigate({
@@ -90,7 +116,7 @@ function RouteComponent() {
     // Validate form
     const valid = resume.trim() !== '' && jobDescription.trim() !== '' && questions >= 1 && questions <= 10
     setIsFormValid(valid)
-    
+
     if (!valid) {
       return
     }
@@ -138,13 +164,27 @@ function RouteComponent() {
         <div className="space-y-4">
 
           <div className="flex flex-col lg:flex-row gap-4 w-full">
-            <FormTextarea
-              id="resume"
-              label="Resume *"
-              value={resume}
-              onChange={setResume}
-              placeholder="Paste your resume here..."
-            />
+            <div className="w-full">
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="resume" className="block text-sm">Resume *</label>
+                <label className="cursor-pointer text-sm text-white hover:underline">
+                  Upload File
+                  <input
+                    type="file"
+                    accept=".txt,.pdf"
+                    onChange={handleResumeFileUpload}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              <FormTextarea
+                id="resume"
+                label=""
+                value={resume}
+                onChange={setResume}
+                placeholder="Paste your resume here or upload a file..."
+              />
+            </div>
             <FormTextarea
               id="jobDescription"
               label="Job Description *"

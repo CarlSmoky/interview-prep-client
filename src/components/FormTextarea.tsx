@@ -9,7 +9,7 @@ interface FormTextareaProps {
 const FormTextarea = ({ id, label, value, onChange, placeholder }: FormTextareaProps) => {
   return (
     <div className="w-full lg:w-1/2">
-      <label htmlFor={id} className="block mb-2 text-sm">{label}</label>
+      {label && <label htmlFor={id} className="block mb-2 text-sm">{label}</label>}
       <textarea
         id={id}
         value={value}
