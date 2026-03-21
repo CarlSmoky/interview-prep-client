@@ -1,12 +1,19 @@
+import { Link } from '@tanstack/react-router'
 import { FileText, Mic, ThumbsUp } from 'lucide-react';
 
-const benefits = [
+interface Step {
+  title: string
+  description: string
+  icon: JSX.Element
+}
+
+const benefits: string[] = [
   'Speak naturally - just like a real interview',
   'Real-time AI feedback on your answers',
   'Personalized questions based on your resume',
 ];
 
-const steps = [
+const steps: Step[] = [
   {
     title: 'Upload Resume & Job Description',
     description: 'Provide your resume and the job description to tailor the interview experience to your background and the role you are targeting.',
@@ -40,7 +47,7 @@ const Home = () => {
               ))}
             </ul>
 
-            <a href="/interview" className="mt-4 h-16 w-64 bg-white text-black rounded-full flex items-center justify-center">Get Started</a>
+            <Link to="/interview" className="mt-4 h-16 w-64 bg-white text-black rounded-full flex items-center justify-center">Get Started</Link>
           </div>
 
 

@@ -1,44 +1,16 @@
 import { useState, useEffect } from 'react'
 import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
-import { Mic, Keyboard, EyeOff, Eye } from 'lucide-react'
 import { submitAnswer } from '../../lib/api/interview'
 import { VapiVoiceInput } from '../../components/VapiVoiceInput'
 import { getMockSubmitAnswerResponse, mockDelay } from '../../lib/mock/interviewMock'
+import TextModeInput from '../../components/TextModeInput'
+import ProgressHeader from '../../components/ProgressHeader'
+import ModeIndicator from '../../components/ModeIndicator'
+import type { QuestionResult, SessionData } from '../../type/interview'
 
 export const Route = createFileRoute('/interview/session')({
   component: RouteComponent,
 })
-
-const TEST = import.meta.env.VITE_TEST_MODE === 'true' // Set via .env file
-
-interface SessionData {
-  sessionId: string
-  firstQuestion: string
-  totalQuestions: number
-  interviewType?: string
-  level?: string
-  mode?: 'text' | 'voice'
-  analysis?: {
-    matchScore: number
-    strengths: string[]
-    missingSkills: string[]
-    improvementSuggestions: string[]
-  }
-}
-
-interface QuestionResult {
-  question: string
-  answer: string
-  evaluation: {
-    technicalAccuracy: number
-    depth: number
-    clarity: number
-    seniorityAlignment?: number
-    overallScore: number
-    feedback: string
-    improvementSuggestions?: string[]
-  }
-}
 
 function RouteComponent() {
   const navigate = useNavigate()
@@ -55,11 +27,10 @@ function RouteComponent() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [results, setResults] = useState<QuestionResult[]>([])
-  const [vapiKey, setVapiKey] = useState(() => {
-    return import.meta.env.VITE_VAPI_PUBLIC_KEY || localStorage.getItem('vapiPublicKey') || ''
-  })
 
+  const vapiKey = import.meta.env.VITE_VAPI_PUBLIC_KEY || localStorage.getItem('vapiPublicKey') || ''
   const mode = sessionData?.mode || 'text'
+  const TEST = import.meta.env.VITE_TEST_MODE === 'true'
 
   useEffect(() => {
     if (!sessionData) {
@@ -73,15 +44,68 @@ function RouteComponent() {
   }
 
   const { sessionId, totalQuestions } = sessionData
-  const progress = (currentQuestion / totalQuestions) * 100
+
+  const validateAnswer = (answer: string): boolean => {
+    if (!answer.trim()) {
+      setError('Please provide an answer')
+      return false
+    }
+    return true
+  }
+
+  const submitAnswerToAPI = async (answer: string) => {
+    if (TEST) {
+      await mockDelay(1000)
+      return getMockSubmitAnswerResponse(currentQuestion - 1, totalQuestions)
+    } else {
+      return await submitAnswer({ sessionId, answer })
+    }
+  }
+
+  const storeQuestionResult = (answer: string, response: any): QuestionResult[] => {
+    const newResult: QuestionResult = {
+      question,
+      answer,
+      evaluation: response.evaluation
+    }
+    return [...results, newResult]
+  }
+
+  const navigateToResults = (updatedResults: QuestionResult[]) => {
+    console.log('Interview complete, navigating to results')
+    window.scrollTo(0, 0)
+    navigate({
+      to: '/interview/results',
+      state: {
+        sessionId,
+        results: updatedResults,
+        interviewType: sessionData.interviewType,
+        level: sessionData.level,
+        totalQuestions: sessionData.totalQuestions
+      } as never,
+    })
+  }
+
+  const moveToNextQuestion = (nextQuestion: string) => {
+    console.log('Moving to next question:', nextQuestion)
+    setQuestion(nextQuestion)
+    setCurrentQuestion(prev => prev + 1)
+    setAnswer('')
+    setShowQuestion(false)
+  }
+
+  const handleNavigation = (response: any, updatedResults: QuestionResult[]) => {
+    if (response.done || !response.nextQuestion) {
+      navigateToResults(updatedResults)
+    } else {
+      moveToNextQuestion(response.nextQuestion.question)
+    }
+  }
 
   const handleSubmitAnswer = async (answerText?: string) => {
     const finalAnswer = answerText || answer
 
-    console.log('handleSubmitAnswer called with:', finalAnswer.substring(0, 50) + '...')
-
-    if (!finalAnswer.trim()) {
-      setError('Please provide an answer')
+    if (!validateAnswer(finalAnswer)) {
       return
     }
 
@@ -89,91 +113,45 @@ function RouteComponent() {
     setError('')
 
     try {
-      let response
-
-      if (TEST) {
-        // MOCK MODE - for styling/development
-        await mockDelay(1000)
-
-        response = getMockSubmitAnswerResponse(currentQuestion - 1, totalQuestions)
-      } else {
-        // PRODUCTION MODE - real API calls
-        console.log('Submitting answer to backend...')
-        response = await submitAnswer({
-          sessionId,
-          answer: finalAnswer,
-        })
-      }
+      const response = await submitAnswerToAPI(finalAnswer)
 
       console.log('Backend response:', response)
       console.log('Next question:', response.nextQuestion)
       console.log('Done:', response.done)
 
-      // Store the result for this question - use the CURRENT question before updating
-      const answeredQuestion = question
-      const newResult: QuestionResult = {
-        question: answeredQuestion,  // Store the question that was just answered
-        answer: finalAnswer,
-        evaluation: response.evaluation
-      }
-
-      const updatedResults = [...results, newResult]
+      const updatedResults = storeQuestionResult(finalAnswer, response)
       setResults(updatedResults)
       console.log('Stored results count:', updatedResults.length, 'Latest score:', response.evaluation.overallScore)
-      console.log('Full stored results:', updatedResults)
 
-      // Move to next question immediately without showing evaluation
-      if (response.done || !response.nextQuestion) {
-        // Interview complete - navigate to results page
-        console.log('Interview complete, navigating to results')
-        navigate({
-          to: '/interview/results',
-          state: {
-            sessionId,
-            results: updatedResults,
-            interviewType: sessionData.interviewType,
-            level: sessionData.level,
-            totalQuestions: sessionData.totalQuestions
-          } as never,
-        })
-      } else {
-        // Move to next question
-        console.log('Moving to next question:', response.nextQuestion.question)
-        setQuestion(response.nextQuestion.question)
-        setCurrentQuestion(prev => prev + 1)
-        setAnswer('')
-        setShowQuestion(false)
-      }
+      handleNavigation(response, updatedResults)
       setIsSubmitting(false)
     } catch (err) {
       console.error('Submit error:', err)
       setError(err instanceof Error ? err.message : 'Failed to submit answer')
       setIsSubmitting(false)
+    } finally {
+      setIsSubmitting(false)
     }
+  }
+
+  if (!sessionData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <div className="text-xl">Loading session...</div>
+      </div>
+    )
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white">
       <div className="w-full max-w-2xl border border-white rounded-lg p-6">
-        {/* Progress Header */}
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">
-            Question {currentQuestion} of {totalQuestions}
-          </h2>
-          <div className="w-full bg-custom-light/20 rounded-full h-2">
-            <div
-              className="bg-white h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
+        <ProgressHeader
+          currentQuestion={currentQuestion}
+          totalQuestions={totalQuestions}
+        />
 
-        {/* Mode Indicator */}
-        <div className="mb-4 text-sm text-gray-400 text-center flex items-center justify-center gap-1">
-          Mode: {mode === 'voice' ? <><Mic className="inline-block w-4 h-4" /> Voice</> : <><Keyboard className="inline-block w-4 h-4" /> Text</>}
-        </div>
+        <ModeIndicator mode={mode} />
 
-        {/* Voice Mode */}
         {mode === 'voice' ? (
           <VapiVoiceInput
             question={question}
@@ -184,40 +162,13 @@ function RouteComponent() {
             vapiPublicKey={vapiKey}
           />
         ) : (
-          /* Text Mode */
-          (<>
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <button
-                  onClick={() => setShowQuestion(!showQuestion)}
-                  className="flex gap-2 items-center text-sm text-gray-400 hover:text-custom-dark transition-colors bg-white rounded-full px-3 py-1 focus:outline-none focus:ring-2 focus:ring-white"
-                >
-                  {showQuestion ? <EyeOff /> : <Eye />} {showQuestion ? 'Hide Question' : 'Show Question'}
-                </button>
-              </div>
-              {showQuestion && (
-                <p className="text-xl leading-relaxed">{question}</p>
-              )}
-
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-sm font-medium">Your Answer</label>
-              <textarea
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                disabled={isSubmitting}
-                className="w-full h-64 bg-transparent border border-white rounded px-4 py-3 text-white resize-none focus:outline-none focus:ring-2 focus:ring-white disabled:opacity-50"
-                placeholder="Type your answer here..."
-              />
-            </div>
-            <button
-              onClick={() => handleSubmitAnswer()}
-              disabled={isSubmitting || !answer.trim()}
-              className="w-full bg-white text-black rounded py-3 px-8 font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Answer'}
-            </button>
-          </>)
+          <TextModeInput
+            question={question}
+            answer={answer}
+            onAnswerChange={setAnswer}
+            onSubmit={() => handleSubmitAnswer()}
+            isSubmitting={isSubmitting}
+          />
         )}
 
         {error && (
