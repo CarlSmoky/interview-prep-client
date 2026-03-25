@@ -6,16 +6,18 @@ interface ModeIndicatorProps {
 
 const ModeIndicator = ({ mode }: ModeIndicatorProps) => {
   return (
-    <div className="mb-4 text-sm text-gray-400 text-center flex items-center justify-center gap-1">
-      Mode: {mode === 'voice' ? (
-        <>
-          <Mic className="inline-block w-4 h-4" /> Voice
-        </>
-      ) : (
-        <>
-          <Keyboard className="inline-block w-4 h-4" /> Text
-        </>
-      )}
+    <div className="mb-6 flex justify-center">
+      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-custom-light/50">
+        {mode === 'voice' ? (
+          <>
+            <Mic className="w-3.5 h-3.5 text-white" /> Voice Mode
+          </>
+        ) : (
+          <>
+            <Keyboard className="w-3.5 h-3.5 text-white" /> Text Mode
+          </>
+        )}
+      </div>
     </div>
   )
 }

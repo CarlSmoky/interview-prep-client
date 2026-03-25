@@ -99,7 +99,15 @@ function RouteComponent() {
   }
 
   const handleNavigation = (response: any, updatedResults: QuestionResult[]) => {
-    if (response.done || !response.nextQuestion) {
+    const preGen = sessionData?.preGeneratedQuestions
+    if (preGen && preGen.length > 0) {
+      // Use pre-generated questions for navigation
+      if (currentQuestion >= totalQuestions) {
+        navigateToResults(updatedResults)
+      } else {
+        moveToNextQuestion(preGen[currentQuestion])
+      }
+    } else if (response.done || !response.nextQuestion) {
       navigateToResults(updatedResults)
     } else {
       moveToNextQuestion(response.nextQuestion.question)
@@ -147,38 +155,51 @@ function RouteComponent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white">
-      <div className="w-full max-w-2xl border border-white rounded-lg p-6">
-        <ProgressHeader
-          currentQuestion={currentQuestion}
-          totalQuestions={totalQuestions}
-        />
-
-        <ModeIndicator mode={mode} />
-
-        {mode === 'voice' ? (
-          <VapiVoiceInput
-            question={question}
-            showQuestion={showQuestion}
-            setShowQuestion={setShowQuestion}
-            onTranscriptComplete={(transcript) => handleSubmitAnswer(transcript)}
-            isDisabled={isSubmitting}
-            vapiPublicKey={vapiKey}
-          />
-        ) : (
-          <TextModeInput
-            question={question}
-            answer={answer}
-            onAnswerChange={setAnswer}
-            onSubmit={() => handleSubmitAnswer()}
-            isSubmitting={isSubmitting}
-          />
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 text-white">
+      <div className="w-full max-w-2xl">
+        {/* Session context */}
+        {(sessionData.companyName || sessionData.jobTitle) && (
+          <div className="text-center mb-6">
+            <p className="text-sm text-custom-light/40">
+              {sessionData.jobTitle}{sessionData.companyName ? ` at ${sessionData.companyName}` : ''}
+            </p>
+          </div>
         )}
 
-        {error && (
-          <div className="text-red-500 text-sm mb-4 mt-4">{error}</div>
-        )}
+        <div className="p-6 md:p-8 rounded-2xl bg-white/[0.02] border border-white/10">
+          <ProgressHeader
+            currentQuestion={currentQuestion}
+            totalQuestions={totalQuestions}
+          />
+
+          <ModeIndicator mode={mode} />
+
+          {mode === 'voice' ? (
+            <VapiVoiceInput
+              question={question}
+              showQuestion={showQuestion}
+              setShowQuestion={setShowQuestion}
+              onTranscriptComplete={(transcript) => handleSubmitAnswer(transcript)}
+              isDisabled={isSubmitting}
+              vapiPublicKey={vapiKey}
+            />
+          ) : (
+            <TextModeInput
+              question={question}
+              answer={answer}
+              onAnswerChange={setAnswer}
+              onSubmit={() => handleSubmitAnswer()}
+              isSubmitting={isSubmitting}
+            />
+          )}
+
+          {error && (
+            <div className="mt-4 p-3 rounded-lg bg-custom-red/10 border border-custom-red/20 text-custom-red text-sm">
+              {error}
+            </div>
+          )}
+        </div>
       </div>
-    </div >
+    </div>
   )
 }

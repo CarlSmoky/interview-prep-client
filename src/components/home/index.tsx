@@ -1,70 +1,112 @@
 import { Link } from '@tanstack/react-router'
-import { FileText, Mic, ThumbsUp } from 'lucide-react';
+import { FileText, Mic, ThumbsUp, CheckCircle } from 'lucide-react';
 
 interface Step {
   title: string
   description: string
   icon: JSX.Element
+  number: number
 }
 
 const benefits: string[] = [
   'Speak naturally - just like a real interview',
   'Real-time AI feedback on your answers',
   'Personalized questions based on your resume',
+  'Download sample Q&A for offline prep',
 ];
 
 const steps: Step[] = [
   {
+    number: 1,
     title: 'Upload Resume & Job Description',
     description: 'Provide your resume and the job description to tailor the interview experience to your background and the role you are targeting.',
-    icon: <FileText size={48} />,
+    icon: <FileText size={28} />,
   },
   {
+    number: 2,
     title: 'Practice with AI Interviewer',
     description: 'Engage in a realistic mock interview with an AI interviewer that asks questions based on your resume and the job description.',
-    icon: <Mic size={48} />,
+    icon: <Mic size={28} />,
   },
   {
+    number: 3,
     title: 'Receive Detailed Feedback',
     description: 'Get comprehensive feedback on your performance, including strengths, areas for improvement, and actionable suggestions to ace your real interview.',
-    icon: <ThumbsUp size={48} />,
+    icon: <ThumbsUp size={28} />,
   },
 ]
 
 const Home = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
-      <section className=" h-screen flex items-center justify-center">
-        <div className="flex">
-          <div className="flex flex-col justify-center items-center gap-4 text-white px-4">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl text-center font-heading font-medium">Your Personal AI Interview Coach</h1>
-            <p className="text-base md:text-lg lg:text-xl max-w-2xl text-center font-body font-thin">Prepare for any interview with personalized practice sessions and expert feedback tailored to your experience.</p>
-            <ul className="mt-4 space-y-2 text-base lg:text-lg">
-              {benefits.map((benefit, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <span className="text-white">•</span> {benefit}
-                </li>
-              ))}
-            </ul>
+      {/* Hero Section */}
+      <section className="h-screen flex items-center justify-center w-full px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-white font-body text-sm md:text-base tracking-widest uppercase mb-4">
+            AI-Powered Interview Preparation
+          </p>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-6 leading-tight">
+            Your Personal AI{' '}
+            <span className="bg-gradient-to-r from-custom-accent to-custom-secondary-accent bg-clip-text text-transparent">
+              Interview Coach
+            </span>
+          </h1>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto text-custom-light/70 font-body font-light mb-10">
+            Prepare for any interview with personalized practice sessions and expert feedback tailored to your experience.
+          </p>
 
-            <Link to="/interview" className="mt-4 h-16 w-64 bg-white text-black rounded-full flex items-center justify-center font-medium">Get Started</Link>
+          <ul className="flex flex-col sm:flex-row flex-wrap justify-center gap-x-8 gap-y-3 mb-10">
+            {benefits.map((benefit, index) => (
+              <li key={index} className="flex items-center gap-2 text-sm md:text-base text-custom-light/80">
+                <CheckCircle size={16} className="text-custom-accent shrink-0" />
+                {benefit}
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              to="/interview"
+              className="h-14 w-64 bg-white text-black rounded-full flex items-center justify-center font-semibold text-lg hover:bg-white/80 transition-colors"
+            >
+              Get Started
+            </Link>
+            <a
+              href="#how-it-works"
+              className="h-14 w-64 border border-white/20 text-white rounded-full flex items-center justify-center font-medium hover:bg-white/5 transition-colors"
+            >
+              How It Works
+            </a>
           </div>
-
-
         </div>
       </section>
-      <section className="text-white">
-        <h2 className="text-center text-3xl font-heading font-medium">Let's Get You Ready</h2>
-        <div className="flex flex-col lg:flex-row p-6 gap-6">
-          {steps.map((step, index) => (
-            <div key={index} className="flex flex-col justify-center items-center gap-4 mb-6 border border-white rounded-lg p-6 w-full lg:w-1/3">
-              <div className="flex justify-center items-center w-20 h-20  rounded-full ">
-                <span className="text-white">{step.icon}</span>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="text-white w-full max-w-6xl mx-auto px-6 py-20">
+        <p className="text-center text-white font-body text-sm tracking-widest uppercase mb-3">
+          Simple 3-Step Process
+        </p>
+        <h2 className="text-center text-3xl md:text-4xl font-heading font-bold mb-12">
+          Let's Get You Ready
+        </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {steps.map((step) => (
+            <div
+              key={step.number}
+              className="relative p-8 rounded-xl bg-white/5 border border-white/10 hover:border-custom-accent/30 transition-colors group"
+            >
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-12 h-12 rounded-full bg-custom-accent/10 border border-custom-accent/30 flex items-center justify-center text-white group-hover:bg-custom-accent/20 transition-colors">
+                  {step.icon}
+                </div>
+                <span className="text-xs font-body tracking-widest uppercase text-custom-light/40">
+                  Step {step.number}
+                </span>
               </div>
-              <div className="flex flex-col justify-center  items-center gap-2 text-center">
-                <h3 className="text-2xl font-heading font-semibold">{step.title}</h3>
-                <p className="text-base max-w-3xl font-body font-light">{step.description}</p>
-              </div>
+              <h3 className="text-xl font-heading font-semibold mb-3">{step.title}</h3>
+              <p className="text-base text-custom-light/60 font-body font-light leading-relaxed">
+                {step.description}
+              </p>
             </div>
           ))}
         </div>

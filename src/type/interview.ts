@@ -24,6 +24,7 @@ export interface SessionData {
   jobDescription?: string;
   companyName?: string;
   jobTitle?: string;
+  preGeneratedQuestions?: string[];
   analysis?: {
     matchScore: number;
     strengths: string[];

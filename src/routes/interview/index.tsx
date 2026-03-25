@@ -8,6 +8,8 @@ import FormNumberInput from '../../components/FormNumberInput'
 import FormButton from '../../components/FormButton'
 import FormInput from '../../components/FormInput'
 import { extractTextFromPDF, readTextFile } from '../../lib/utils/fileReader'
+import { FileText, Briefcase, Settings } from 'lucide-react'
+import ModeSelectionModal from '../../components/ModeSelectionModal'
 
 export const Route = createFileRoute('/interview/')({
   component: RouteComponent,
@@ -26,11 +28,6 @@ const INTERVIEW_TYPE_OPTIONS = [
   { value: 'behavioral', label: 'Behavioral Only' }
 ]
 
-const MODE_OPTIONS = [
-  { value: 'text', label: 'Text Input' },
-  { value: 'voice', label: 'Voice Input' }
-]
-
 function RouteComponent() {
   const navigate = useNavigate()
   const [resume, setResume] = useState('')
@@ -39,12 +36,12 @@ function RouteComponent() {
   const [jobTitle, setJobTitle] = useState('')
   const [level, setLevel] = useState('Intermediate')
   const [interviewType, setInterviewType] = useState('mix')
-  const [mode, setMode] = useState<'text' | 'voice'>('voice')
   const [questions, setQuestions] = useState(3)
   const [isLoading, setIsLoading] = useState(false)
   const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false)
   const [error, setError] = useState('')
   const [isFormValid, setIsFormValid] = useState(true)
+  const [showModeModal, setShowModeModal] = useState(false)
 
   const handleResumeFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -78,7 +75,7 @@ function RouteComponent() {
     })
   }
 
-  const getMockResponse = async () => {
+  const getMockResponse = async (mode: 'text' | 'voice') => {
     await mockDelay(500)
     return {
       ...getMockStartInterviewResponse(questions, interviewType, level, mode),
@@ -89,7 +86,7 @@ function RouteComponent() {
     }
   }
 
-  const getProductionResponse = async () => {
+  const getProductionResponse = async (mode: 'text' | 'voice') => {
     const response = await startInterview({
       resume,
       jobDescription,
@@ -113,7 +110,7 @@ function RouteComponent() {
     }
   }
 
-  const handleStartInterview = async () => {
+  const handleStartInterview = () => {
     // Validate form
     const valid = resume.trim() !== '' && jobDescription.trim() !== '' && questions >= 1 && questions <= 10
     setIsFormValid(valid)
@@ -122,6 +119,11 @@ function RouteComponent() {
       return
     }
 
+    setShowModeModal(true)
+  }
+
+  const startWithMode = async (mode: 'text' | 'voice') => {
+    setShowModeModal(false)
     setIsLoading(true)
     setError('')
 
@@ -129,14 +131,13 @@ function RouteComponent() {
       let response
 
       if (TEST) {
-        // MOCK MODE - for styling/development
-        response = await getMockResponse()
+        response = await getMockResponse(mode)
       } else {
         try {
-          response = await getProductionResponse()
+          response = await getProductionResponse(mode)
         } catch (apiError) {
           console.warn('API failed, falling back to mock mode:', apiError)
-          response = await getMockResponse()
+          response = await getMockResponse(mode)
         }
       }
 
@@ -182,6 +183,7 @@ function RouteComponent() {
           interviewType,
         } as never,
       })
+      window.scrollTo({ top: 0 })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate questions')
     } finally {
@@ -190,111 +192,116 @@ function RouteComponent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-8">
       <form
         onSubmit={(e) => {
           e.preventDefault()
           handleStartInterview()
         }}
-        className="w-full p-6 text-white"
+        className="w-full max-w-4xl text-white"
       >
-        <div className="mb-8">
+        <div className="mb-10">
           <h1 className="text-4xl md:text-5xl font-heading font-bold mb-3 bg-gradient-to-r from-white to-custom-accent bg-clip-text text-transparent">
             Ace Your Next Interview
           </h1>
-          <p className="text-lg text-custom-light/80 font-body max-w-2xl">
+          <p className="text-lg text-custom-light/70 font-body max-w-2xl">
             Get personalized interview questions tailored to your resume and job description.
             Practice with our AI interviewer or review sample answers to prepare effectively.
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
 
-          <div className="flex flex-col lg:flex-row gap-4 w-full">
-            <div className="w-full">
-              <div className="flex items-center justify-between mb-2">
-
-
-              </div>
-              <div className="flex flex-col md:flex-row gap-4 w-full">
-                <div className="w-full">
-                  <FormTextarea
-                    id="resume"
-                    label="Resume *"
-                    value={resume}
-                    onChange={setResume}
-                    placeholder="Paste your resume here or upload a file..."
-                  />
-                  <label className="cursor-pointer text-sm text-white underline underline-offset-4 hover:text-white/50 ">
-                    Upload File
-                    <input
-                      type="file"
-                      accept=".txt,.pdf"
-                      onChange={handleResumeFileUpload}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
+          {/* Section 1: Documents */}
+          <div className="p-6 rounded-xl bg-white/5 border border-white/10 space-y-4">
+            <h2 className="text-lg font-heading font-semibold flex items-center gap-2">
+              <FileText size={20} className="text-white" />
+              Your Documents
+            </h2>
+            <div className="flex flex-col md:flex-row gap-4 w-full">
+              <div className="w-full">
                 <FormTextarea
-                  id="jobDescription"
-                  label="Job Description *"
-                  value={jobDescription}
-                  onChange={setJobDescription}
-                  placeholder="Paste the job description here..."
+                  id="resume"
+                  label="Resume *"
+                  value={resume}
+                  onChange={setResume}
+                  placeholder="Paste your resume here or upload a file..."
                 />
+                <label className="cursor-pointer text-sm text-white underline underline-offset-4 hover:text-white/50">
+                  Upload File
+                  <input
+                    type="file"
+                    accept=".txt,.pdf"
+                    onChange={handleResumeFileUpload}
+                    className="hidden"
+                  />
+                </label>
               </div>
+              <FormTextarea
+                id="jobDescription"
+                label="Job Description *"
+                value={jobDescription}
+                onChange={setJobDescription}
+                placeholder="Paste the job description here..."
+              />
             </div>
           </div>
 
+          {/* Section 2: Role Details */}
+          <div className="p-6 rounded-xl bg-white/5 border border-white/10 space-y-4">
+            <h2 className="text-lg font-heading font-semibold flex items-center gap-2">
+              <Briefcase size={20} className="text-white" />
+              Role Details
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                id="companyName"
+                label="Company Name"
+                value={companyName}
+                onChange={setCompanyName}
+                placeholder="Company name"
+              />
+              <FormInput
+                id="jobTitle"
+                label="Job Title"
+                value={jobTitle}
+                onChange={setJobTitle}
+                placeholder="Job title"
+              />
+            </div>
+            <FormSelect
+              id="level"
+              label="Level"
+              value={level}
+              onChange={setLevel}
+              options={LEVEL_OPTIONS}
+            />
+          </div>
 
-          <FormInput
-            id="companyName"
-            label="Company Name"
-            value={companyName}
-            onChange={setCompanyName}
-            placeholder="Company name"
-          />
-          <FormInput
-            id="jobTitle"
-            label="Job Title"
-            value={jobTitle}
-            onChange={setJobTitle}
-            placeholder="Job title"
-          />
-
-
-          <FormSelect
-            id="level"
-            label="Level"
-            value={level}
-            onChange={setLevel}
-            options={LEVEL_OPTIONS}
-          />
-
-          <FormSelect
-            id="interviewType"
-            label="Interview Type"
-            value={interviewType}
-            onChange={setInterviewType}
-            options={INTERVIEW_TYPE_OPTIONS}
-          />
-
-          <FormSelect
-            id="mode"
-            label="Interview Mode"
-            value={mode}
-            onChange={(val) => setMode(val as 'text' | 'voice')}
-            options={MODE_OPTIONS}
-          />
-
-          <FormNumberInput
-            id="questions"
-            label="Questions"
-            value={questions}
-            onChange={setQuestions}
-            min={1}
-            max={10}
-          />
+          {/* Section 3: Interview Settings */}
+          <div className="p-6 rounded-xl bg-white/5 border border-white/10 space-y-4">
+            <h2 className="text-lg font-heading font-semibold flex items-center gap-2">
+              <Settings size={20} className="text-white" />
+              Interview Settings
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormSelect
+                id="interviewType"
+                label="Interview Type"
+                value={interviewType}
+                onChange={setInterviewType}
+                options={INTERVIEW_TYPE_OPTIONS}
+              />
+              <FormNumberInput
+                id="questions"
+                label="Number of Questions"
+                value={questions}
+                onChange={setQuestions}
+                min={1}
+                max={10}
+              />
+            </div>
+          </div>
 
           {error && (
             <div className="text-red-500 text-sm">{error}</div>
@@ -306,7 +313,7 @@ function RouteComponent() {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <FormButton
               text="View Sample Questions"
               loadingText="Generating..."
@@ -323,6 +330,14 @@ function RouteComponent() {
           </div>
         </div>
       </form>
+
+      {/* Mode Selection Modal */}
+      {showModeModal && (
+        <ModeSelectionModal
+          onSelectMode={startWithMode}
+          onClose={() => setShowModeModal(false)}
+        />
+      )}
     </div>
   )
 }
