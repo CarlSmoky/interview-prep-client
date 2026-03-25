@@ -198,9 +198,14 @@ function RouteComponent() {
         }}
         className="w-full p-6 text-white"
       >
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold">AI Interview</h1>
-          <p className="text-custom-light">Practice with AI</p>
+        <div className="mb-8">
+          <h1 className="text-4xl md:text-5xl font-heading font-bold mb-3 bg-gradient-to-r from-white to-custom-accent bg-clip-text text-transparent">
+            Ace Your Next Interview
+          </h1>
+          <p className="text-lg text-custom-light/80 font-body max-w-2xl">
+            Get personalized interview questions tailored to your resume and job description.
+            Practice with our AI interviewer or review sample answers to prepare effectively.
+          </p>
         </div>
 
         <div className="space-y-4">
@@ -208,50 +213,55 @@ function RouteComponent() {
           <div className="flex flex-col lg:flex-row gap-4 w-full">
             <div className="w-full">
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="resume" className="block text-sm">Resume *</label>
-                <label className="cursor-pointer text-sm text-white hover:underline">
-                  Upload File
-                  <input
-                    type="file"
-                    accept=".txt,.pdf"
-                    onChange={handleResumeFileUpload}
-                    className="hidden"
-                  />
-                </label>
+
+
               </div>
-              <FormTextarea
-                id="resume"
-                label=""
-                value={resume}
-                onChange={setResume}
-                placeholder="Paste your resume here or upload a file..."
-              />
+              <div className="flex flex-col md:flex-row gap-4 w-full">
+                <div className="w-full">
+                  <FormTextarea
+                    id="resume"
+                    label="Resume *"
+                    value={resume}
+                    onChange={setResume}
+                    placeholder="Paste your resume here or upload a file..."
+                  />
+                  <label className="cursor-pointer text-sm text-white underline underline-offset-4 hover:text-white/50 ">
+                    Upload File
+                    <input
+                      type="file"
+                      accept=".txt,.pdf"
+                      onChange={handleResumeFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+                <FormTextarea
+                  id="jobDescription"
+                  label="Job Description *"
+                  value={jobDescription}
+                  onChange={setJobDescription}
+                  placeholder="Paste the job description here..."
+                />
+              </div>
             </div>
-            <FormTextarea
-              id="jobDescription"
-              label="Job Description *"
-              value={jobDescription}
-              onChange={setJobDescription}
-              placeholder="Paste the job description here..."
-            />
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-4 w-full">
-            <FormInput
-              id="companyName"
-              label="Company Name"
-              value={companyName}
-              onChange={setCompanyName}
-              placeholder="Input company name"
-            />
-            <FormInput
-              id="jobTitle"
-              label="Job Title"
-              value={jobTitle}
-              onChange={setJobTitle}
-              placeholder="Input job title"
-            />
-          </div>
+
+          <FormInput
+            id="companyName"
+            label="Company Name"
+            value={companyName}
+            onChange={setCompanyName}
+            placeholder="Company name"
+          />
+          <FormInput
+            id="jobTitle"
+            label="Job Title"
+            value={jobTitle}
+            onChange={setJobTitle}
+            placeholder="Job title"
+          />
+
 
           <FormSelect
             id="level"
