@@ -1,0 +1,181 @@
+<svg width="100%" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @keyframes blink { 0%,90%,100%{opacity:1} 93%,97%{opacity:0} }
+      @keyframes scan { 0%{transform:translateY(-10px)} 50%{transform:translateY(10px)} 100%{transform:translateY(-10px)} }
+      @keyframes think { 0%,100%{opacity:0.2} 50%{opacity:1} }
+      @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+      @keyframes glow-eye { 0%,100%{opacity:0.95} 50%{opacity:0.55} }
+      @keyframes heartbeat { 0%,100%{transform:scale(1)} 30%{transform:scale(1.22)} 60%{transform:scale(0.96)} 80%{transform:scale(1.1)} }
+      @keyframes typing { 0%,100%{opacity:0} 50%{opacity:1} }
+      .eye-l { animation: blink 4s ease-in-out infinite, glow-eye 2s ease-in-out infinite; }
+      .eye-r { animation: blink 4s ease-in-out infinite 0.15s, glow-eye 2s ease-in-out infinite 0.5s; }
+      .scan-l { animation: scan 2.8s ease-in-out infinite; }
+      .scan-r { animation: scan 2.8s ease-in-out infinite 0.4s; }
+      .td1 { animation: think 1.2s ease-in-out infinite; }
+      .td2 { animation: think 1.2s ease-in-out infinite 0.3s; }
+      .td3 { animation: think 1.2s ease-in-out infinite 0.6s; }
+      .robot { animation: float 3.2s ease-in-out infinite; }
+      .heart { animation: heartbeat 1.4s ease-in-out infinite; transform-origin: 148px 368px; }
+      .cursor { animation: typing 1s step-end infinite; }
+    </style>
+    <filter id="row-blur">
+      <feGaussianBlur stdDeviation="2.8"/>
+    </filter>
+    <linearGradient id="fade-overlay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4F3FD" stop-opacity="0"/>
+      <stop offset="80%" stop-color="#F4F3FD" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Desk -->
+  <rect x="60" y="452" width="560" height="14" rx="4" fill="#AFA9EC" opacity="0.12"/>
+
+  <!-- ROBOT -->
+  <g class="robot">
+    <!-- Body -->
+    <rect x="88" y="296" width="164" height="152" rx="18" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.6"/>
+    <rect x="88" y="296" width="164" height="152" rx="18" fill="#534AB7" opacity="0.08"/>
+    <line x1="170" y1="312" x2="170" y2="444" stroke="#534AB7" stroke-width="0.6" opacity="0.18"/>
+    <!-- Chest badge -->
+    <rect x="100" y="312" width="52" height="32" rx="7" fill="#534AB7" opacity="0.18" stroke="#534AB7" stroke-width="0.8"/>
+    <text x="126" y="332" text-anchor="middle" font-size="9" fill="#3C3489" font-family="monospace" font-weight="700">AI</text>
+    <!-- Tie -->
+    <rect x="158" y="316" width="26" height="84" rx="4" fill="#534AB7" opacity="0.22"/>
+    <polygon points="171,400 159,350 183,350" fill="#3C3489" opacity="0.3"/>
+    <!-- Arms -->
+    <rect x="48" y="306" width="42" height="13" rx="6.5" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+    <rect x="250" y="306" width="42" height="13" rx="6.5" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+    <!-- Pen -->
+    <rect x="287" y="316" width="5" height="20" rx="2" fill="#AFA9EC" opacity="0.9" transform="rotate(-18 289 322)"/>
+    <polygon points="287,336 292,336 289.5,344" fill="#7F77DD" opacity="0.8" transform="rotate(-18 289 322)"/>
+    <!-- Legs -->
+    <rect x="126" y="444" width="26" height="14" rx="5" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+    <rect x="186" y="444" width="26" height="14" rx="5" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+    <!-- Neck -->
+    <rect x="148" y="272" width="44" height="26" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+
+    <!-- HEART on chest -->
+    <g class="heart">
+      <path d="M148,382 C148,382 132,370 132,358 C132,350 140,344 148,352 C156,344 164,350 164,358 C164,370 148,382 148,382 Z"
+        fill="#F472B6" opacity="0.92"/>
+      <ellipse cx="141" cy="356" rx="4" ry="3" fill="#FBD0E8" opacity="0.6" transform="rotate(-20 141 356)"/>
+    </g>
+
+    <!-- HEAD -->
+    <rect x="94" y="168" width="152" height="108" rx="22" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.8"/>
+    <rect x="94" y="168" width="152" height="108" rx="22" fill="#7F77DD" opacity="0.06"/>
+    <!-- Antenna -->
+    <line x1="170" y1="168" x2="170" y2="140" stroke="#534AB7" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="170" cy="133" r="9" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.5"/>
+    <circle cx="170" cy="133" r="4.5" fill="#7F77DD"/>
+    <circle cx="170" cy="133" r="9" fill="none" stroke="#7F77DD" stroke-width="1">
+      <animate attributeName="r" values="9;28;9" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0;0.7" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Eye sockets -->
+    <rect x="112" y="198" width="40" height="30" rx="9" fill="#3C3489" opacity="0.12" stroke="#534AB7" stroke-width="1"/>
+    <rect x="188" y="198" width="40" height="30" rx="9" fill="#3C3489" opacity="0.12" stroke="#534AB7" stroke-width="1"/>
+    <!-- Iris -->
+    <ellipse cx="132" cy="213" rx="11" ry="11" fill="#7F77DD" class="eye-l"/>
+    <ellipse cx="208" cy="213" rx="11" ry="11" fill="#7F77DD" class="eye-r"/>
+    <ellipse cx="132" cy="213" rx="5" ry="5" fill="#EEEDFE"/>
+    <ellipse cx="208" cy="213" rx="5" ry="5" fill="#EEEDFE"/>
+    <!-- Scan lines -->
+    <line x1="112" y1="213" x2="152" y2="213" stroke="#AFA9EC" stroke-width="1.5" opacity="0.6" class="scan-l"/>
+    <line x1="188" y1="213" x2="228" y2="213" stroke="#AFA9EC" stroke-width="1.5" opacity="0.6" class="scan-r"/>
+    <!-- Mouth -->
+    <rect x="130" y="242" width="80" height="17" rx="8.5" fill="#3C3489" opacity="0.1" stroke="#534AB7" stroke-width="0.8"/>
+    <line x1="142" y1="250.5" x2="142" y2="250.5" stroke="#7F77DD" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="155" y1="247" x2="155" y2="254" stroke="#7F77DD" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="170" y1="245" x2="170" y2="256" stroke="#7F77DD" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+    <line x1="185" y1="247" x2="185" y2="254" stroke="#7F77DD" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="198" y1="250.5" x2="198" y2="250.5" stroke="#7F77DD" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Thinking dots -->
+    <circle cx="232" cy="158" r="4.5" fill="#AFA9EC" class="td1"/>
+    <circle cx="248" cy="146" r="5.5" fill="#AFA9EC" class="td2"/>
+    <circle cx="266" cy="132" r="7" fill="#7F77DD" class="td3"/>
+  </g>
+
+  <!-- Name tag -->
+  <rect x="90" y="406" width="158" height="28" rx="8" fill="#534AB7" opacity="0.1" stroke="#534AB7" stroke-width="0.8"/>
+  <text x="169" y="424" text-anchor="middle" font-size="10" fill="#534AB7" font-family="sans-serif" font-weight="600">AI Interview Coach</text>
+
+  <!-- SPEECH BUBBLE -->
+  <rect x="296" y="34" width="212" height="66" rx="14" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.4"/>
+  <polygon points="308,92 288,112 330,98" fill="#EEEDFE"/>
+  <line x1="308" y1="93" x2="289" y2="111" stroke="#534AB7" stroke-width="1.4"/>
+  <line x1="308" y1="93" x2="330" y2="98" stroke="#534AB7" stroke-width="1.4"/>
+  <text x="402" y="59" text-anchor="middle" font-size="10.5" fill="#3C3489" font-family="sans-serif" font-weight="600">Tell me about yourself</text>
+  <text x="402" y="75" text-anchor="middle" font-size="10.5" fill="#3C3489" font-family="sans-serif" font-weight="600">and your experience.</text>
+  <circle cx="374" cy="92" r="3" fill="#AFA9EC" class="td1"/>
+  <circle cx="386" cy="92" r="3" fill="#AFA9EC" class="td2"/>
+  <circle cx="398" cy="92" r="3" fill="#7F77DD" class="td3"/>
+
+  <!-- CLIPBOARD -->
+  <rect x="358" y="114" width="236" height="310" rx="12" fill="#CCC9F0" opacity="0.25" stroke="#888780" stroke-width="1"/>
+  <!-- Clip -->
+  <rect x="450" y="102" width="52" height="26" rx="6" fill="#888780" opacity="0.5"/>
+  <rect x="459" y="96" width="34" height="16" rx="8" fill="none" stroke="#888780" stroke-width="2.2"/>
+  <!-- Paper -->
+  <rect x="370" y="134" width="212" height="278" rx="8" fill="#F4F3FD" opacity="0.98" stroke="#CCC9F0" stroke-width="0.8"/>
+
+  <!-- Header -->
+  <rect x="370" y="134" width="212" height="38" rx="8" fill="#534AB7"/>
+  <rect x="370" y="152" width="212" height="20" fill="#534AB7"/>
+  <text x="476" y="159" text-anchor="middle" font-size="10.5" fill="#EEEDFE" font-family="sans-serif" font-weight="700">INTERVIEW EVALUATION</text>
+
+  <!-- Circular score -->
+  <circle cx="476" cy="226" r="36" fill="#EEEDFE" stroke="#CECBF6" stroke-width="1.5"/>
+  <circle cx="476" cy="226" r="28" fill="none" stroke="#CECBF6" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="476" cy="226" r="28" fill="none" stroke="#534AB7" stroke-width="8"
+    stroke-linecap="round" stroke-dasharray="176" stroke-dashoffset="176"
+    transform="rotate(-90 476 226)">
+    <animate attributeName="stroke-dashoffset" from="176" to="35" dur="1.6s" fill="freeze" begin="0.4s"/>
+  </circle>
+  <text x="476" y="222" text-anchor="middle" font-size="16" fill="#3C3489" font-family="sans-serif" font-weight="700" dominant-baseline="central">80%</text>
+  <text x="476" y="240" text-anchor="middle" font-size="8" fill="#7F77DD" font-family="sans-serif">SCORE</text>
+
+  <!-- Divider -->
+  <line x1="380" y1="272" x2="570" y2="272" stroke="#AFA9EC" stroke-width="0.7" opacity="0.5"/>
+
+  <!-- Blurred rows -->
+  <g filter="url(#row-blur)" opacity="0.5">
+    <text x="382" y="291" font-size="9" fill="#3C3489" font-family="sans-serif">Communication</text>
+    <rect x="382" y="295" width="130" height="7" rx="3.5" fill="#CECBF6"/>
+    <rect x="382" y="295" width="108" height="7" rx="3.5" fill="#534AB7" opacity="0.75"/>
+    <circle cx="548" cy="291" r="7" fill="#534AB7" opacity="0.2"/>
+    <path d="M543 291l3 3 6-6" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g filter="url(#row-blur)" opacity="0.42">
+    <text x="382" y="318" font-size="9" fill="#3C3489" font-family="sans-serif">Technical depth</text>
+    <rect x="382" y="322" width="130" height="7" rx="3.5" fill="#CECBF6"/>
+    <rect x="382" y="322" width="88" height="7" rx="3.5" fill="#7F77DD" opacity="0.8"/>
+    <circle cx="548" cy="318" r="7" fill="#7F77DD" opacity="0.2"/>
+    <path d="M543 318l3 3 6-6" fill="none" stroke="#7F77DD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g filter="url(#row-blur)" opacity="0.38">
+    <text x="382" y="345" font-size="9" fill="#3C3489" font-family="sans-serif">Problem solving</text>
+    <rect x="382" y="349" width="130" height="7" rx="3.5" fill="#CECBF6"/>
+    <rect x="382" y="349" width="112" height="7" rx="3.5" fill="#534AB7" opacity="0.7"/>
+    <circle cx="548" cy="345" r="7" fill="#534AB7" opacity="0.2"/>
+    <path d="M543 345l3 3 6-6" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g filter="url(#row-blur)" opacity="0.34">
+    <text x="382" y="372" font-size="9" fill="#3C3489" font-family="sans-serif">Confidence</text>
+    <rect x="382" y="376" width="130" height="7" rx="3.5" fill="#CECBF6"/>
+    <rect x="382" y="376" width="74" height="7" rx="3.5" fill="#AFA9EC" opacity="0.8"/>
+    <circle cx="548" cy="372" r="7" fill="#EF9F27" opacity="0.2"/>
+    <text x="548" y="376" text-anchor="middle" font-size="11" fill="#BA7517" opacity="0.7">!</text>
+  </g>
+
+  <!-- Fade + lock overlay -->
+  <rect x="370" y="276" width="212" height="112" fill="url(#fade-overlay)"/>
+  <g opacity="0.5">
+    <rect x="462" y="316" width="28" height="22" rx="5" fill="#534AB7" opacity="0.18" stroke="#534AB7" stroke-width="1"/>
+    <path d="M468 316v-6a8 8 0 0 1 16 0v6" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="476" cy="327" r="3" fill="#534AB7" opacity="0.7"/>
+    <line x1="476" y1="328" x2="476" y2="333" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  </g>
+
+</svg>

@@ -147,7 +147,6 @@ function RouteComponent() {
         <ResultsActions
           onRetryInterview={() => navigate({ to: '/interview' })}
           onGoHome={() => {
-            console.log('Navigating to home page')
             window.location.href = '/'
           }}
           onDownload={handleDownload}
