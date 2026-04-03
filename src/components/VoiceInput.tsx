@@ -68,9 +68,9 @@ const VoiceInput = ({
             ]
           },
           transcriber: {
-            provider: 'deepgram',
+            provider: 'deepgram' as const,
             model: 'nova-2',  // This does the actual speech-to-text
-            language: 'en'
+            language: 'en' as const
           },
           voice: {
             provider: 'playht',
@@ -79,7 +79,7 @@ const VoiceInput = ({
         }
 
       console.log('Starting Vapi with config:', config)
-      await vapiRef.current.start(config)
+      await vapiRef.current.start(config as Parameters<typeof vapiRef.current.start>[0])
 
       setIsInitializing(false)
 

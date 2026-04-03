@@ -61,8 +61,7 @@ function RouteComponent() {
       return response.finalReport
     } catch (err) {
       console.error('Error finishing interview:', err)
-      // Don't set error state - final report is optional if we have results
-      console.warn('Continuing without AI-generated report')
+      setError('Could not load AI report. Your results are still available below.')
       return null
     }
   }
