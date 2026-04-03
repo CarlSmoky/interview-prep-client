@@ -11,7 +11,7 @@ interface VapiVoiceInputProps {
   isLastQuestion?: boolean
 }
 
-export function VapiVoiceInput({
+const VapiVoiceInput = ({
   question,
   showQuestion,
   setShowQuestion,
@@ -19,7 +19,7 @@ export function VapiVoiceInput({
   isDisabled = false,
   vapiPublicKey,
   isLastQuestion = false,
-}: VapiVoiceInputProps) {
+}: VapiVoiceInputProps) => {
   const { start, stop, isCallActive, transcript, isSpeaking, assistantSpeaking, clearTranscript } = useVapi(vapiPublicKey)
 
   const handleStart = () => {
@@ -109,7 +109,7 @@ export function VapiVoiceInput({
         )}
 
         {transcript && (
-          <div className="p-4 rounded-lg bg-white/[0.03] border border-white/10">
+          <div className="p-4 rounded-lg bg-white/3 border border-white/10">
             <p className="text-xs tracking-widest uppercase text-custom-light/40 mb-2">Your Answer</p>
             <p className="text-custom-light/80 whitespace-pre-wrap text-sm leading-relaxed">{transcript}</p>
           </div>
@@ -124,3 +124,5 @@ export function VapiVoiceInput({
     </div>
   )
 }
+
+export default VapiVoiceInput

@@ -6,7 +6,7 @@
       @keyframes think { 0%,100%{opacity:0.2} 50%{opacity:1} }
       @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
       @keyframes glow-eye { 0%,100%{opacity:0.95} 50%{opacity:0.55} }
-      @keyframes heartbeat { 0%,100%{transform:scale(1)} 30%{transform:scale(1.22)} 60%{transform:scale(0.96)} 80%{transform:scale(1.1)} }
+      @keyframes heartbeat { 0%,100%{transform:scale(1)} 30%{transform:scale(1.12)} 60%{transform:scale(0.96)} 80%{transform:scale(1.1)} }
       @keyframes typing { 0%,100%{opacity:0} 50%{opacity:1} }
       .eye-l { animation: blink 4s ease-in-out infinite, glow-eye 2s ease-in-out infinite; }
       .eye-r { animation: blink 4s ease-in-out infinite 0.15s, glow-eye 2s ease-in-out infinite 0.5s; }
@@ -16,7 +16,7 @@
       .td2 { animation: think 1.2s ease-in-out infinite 0.3s; }
       .td3 { animation: think 1.2s ease-in-out infinite 0.6s; }
       .robot { animation: float 3.2s ease-in-out infinite; }
-      .heart { animation: heartbeat 1.4s ease-in-out infinite; transform-origin: 148px 368px; }
+      .heart { animation: heartbeat 6.4s ease-in-out infinite; transform-origin: 148px 368px; }
       .cursor { animation: typing 1s step-end infinite; }
     </style>
     <filter id="row-blur">
@@ -37,9 +37,6 @@
     <rect x="88" y="296" width="164" height="152" rx="18" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.6"/>
     <rect x="88" y="296" width="164" height="152" rx="18" fill="#534AB7" opacity="0.08"/>
     <line x1="170" y1="312" x2="170" y2="444" stroke="#534AB7" stroke-width="0.6" opacity="0.18"/>
-    <!-- Chest badge -->
-    <rect x="100" y="312" width="52" height="32" rx="7" fill="#534AB7" opacity="0.18" stroke="#534AB7" stroke-width="0.8"/>
-    <text x="126" y="332" text-anchor="middle" font-size="9" fill="#3C3489" font-family="monospace" font-weight="700">AI</text>
     <!-- Tie -->
     <rect x="158" y="316" width="26" height="84" rx="4" fill="#534AB7" opacity="0.22"/>
     <polygon points="171,400 159,350 183,350" fill="#3C3489" opacity="0.3"/>
@@ -57,8 +54,8 @@
 
     <!-- HEART on chest -->
     <g class="heart">
-      <path d="M148,382 C148,382 132,370 132,358 C132,350 140,344 148,352 C156,344 164,350 164,358 C164,370 148,382 148,382 Z"
-        fill="#F472B6" opacity="0.92"/>
+      <path d="M208,382 C208,382 192,370 192,358 C192,350 200,344 208,352 C216,344 224,350 224,358 C224,370 208,382 208,382 Z"
+      fill="#bd93bd" opacity="0.92"/>
       <ellipse cx="141" cy="356" rx="4" ry="3" fill="#FBD0E8" opacity="0.6" transform="rotate(-20 141 356)"/>
     </g>
 
@@ -97,9 +94,7 @@
     <circle cx="266" cy="132" r="7" fill="#7F77DD" class="td3"/>
   </g>
 
-  <!-- Name tag -->
-  <rect x="90" y="406" width="158" height="28" rx="8" fill="#534AB7" opacity="0.1" stroke="#534AB7" stroke-width="0.8"/>
-  <text x="169" y="424" text-anchor="middle" font-size="10" fill="#534AB7" font-family="sans-serif" font-weight="600">AI Interview Coach</text>
+  
 
   <!-- SPEECH BUBBLE -->
   <rect x="296" y="34" width="212" height="66" rx="14" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.4"/>

@@ -28,7 +28,7 @@ const FormNumberInput = ({
         min={min}
         max={max}
         placeholder={placeholder}
-        className="w-full bg-transparent border border-white rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-custom-accent"
+        className="w-full bg-custom-light text-custom-dark border border-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent"
       />
     </div>
   )

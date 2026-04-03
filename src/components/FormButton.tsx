@@ -1,3 +1,5 @@
+import Button from './Button'
+
 interface FormButtonProps {
   text: string
   loadingText?: string
@@ -6,6 +8,7 @@ interface FormButtonProps {
   type?: 'submit' | 'button'
   onClick?: () => void
   className?: string
+  variant?: 'filled' | 'outline'
 }
 
 const FormButton = ({
@@ -15,20 +18,18 @@ const FormButton = ({
   disabled = false,
   type = 'submit',
   onClick,
-  className
-}: FormButtonProps) => {
-  const defaultClassName = "w-full bg-custom-secondary-accent text-black rounded py-2 px-4 font-medium hover:bg-custom-secondary-accent/60 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-custom-accent"
-
-  return (
-    <button
-      type={type}
-      disabled={isLoading || disabled}
-      onClick={onClick}
-      className={className || defaultClassName}
-    >
-      {isLoading ? loadingText : text}
-    </button>
-  )
-}
+  className,
+  variant = 'filled',
+}: FormButtonProps) => (
+  <Button
+    type={type}
+    onClick={onClick}
+    disabled={isLoading || disabled}
+    variant={variant}
+    className={className}
+  >
+    {isLoading ? loadingText : text}
+  </Button>
+)
 
 export default FormButton

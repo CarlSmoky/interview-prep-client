@@ -5,7 +5,7 @@ interface ModeSelectionModalProps {
   onClose: () => void
 }
 
-export default function ModeSelectionModal({ onSelectMode, onClose }: ModeSelectionModalProps) {
+const ModeSelectionModal = ({ onSelectMode, onClose }: ModeSelectionModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-custom-dark border border-white/10 rounded-2xl p-8 max-w-md w-full text-white relative">
@@ -41,3 +41,5 @@ export default function ModeSelectionModal({ onSelectMode, onClose }: ModeSelect
     </div>
   )
 }
+
+export default ModeSelectionModal

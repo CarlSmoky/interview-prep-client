@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createFileRoute, useNavigate, useLocation } from '@tanstack/react-router'
 import { submitAnswer } from '../../lib/api/interview'
-import { VapiVoiceInput } from '../../components/VapiVoiceInput'
+import VapiVoiceInput from '../../components/VapiVoiceInput'
 import { getMockSubmitAnswerResponse, mockDelay } from '../../lib/mock/interviewMock'
 import TextModeInput from '../../components/TextModeInput'
 import ProgressHeader from '../../components/ProgressHeader'
@@ -126,14 +126,8 @@ function RouteComponent() {
 
     try {
       const response = await submitAnswerToAPI(finalAnswer)
-
-      console.log('Backend response:', response)
-      console.log('Next question:', response.nextQuestion)
-      console.log('Done:', response.done)
-
       const updatedResults = storeQuestionResult(finalAnswer, response)
       setResults(updatedResults)
-      console.log('Stored results count:', updatedResults.length, 'Latest score:', response.evaluation.overallScore)
 
       handleNavigation(response, updatedResults)
       setIsSubmitting(false)

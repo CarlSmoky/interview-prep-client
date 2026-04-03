@@ -2,15 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import Vapi from '@vapi-ai/web'
 import { Mic, MicOff, Loader2 } from 'lucide-react'
 
-/**
- * VoiceInput Component
- * 
- * This component uses Vapi ONLY for voice transcription (Speech-to-Text).
- * - Vapi transcribes user's spoken answer
- * - Backend (localhost:3000) generates questions and evaluates answers
- * - No LLM logic happens in Vapi - it's just a microphone interface
- */
-
 interface VoiceInputProps {
   question: string
   onTranscriptComplete: (transcript: string) => void
@@ -19,13 +10,13 @@ interface VoiceInputProps {
   assistantId?: string
 }
 
-export function VoiceInput({
+const VoiceInput = ({
   question,
   onTranscriptComplete,
   isDisabled,
   vapiPublicKey,
   assistantId
-}: VoiceInputProps) {
+}: VoiceInputProps) => {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
   const [error, setError] = useState('')
@@ -161,7 +152,7 @@ export function VoiceInput({
           className={`
             w-24 h-24 rounded-full flex items-center justify-center transition-all
             ${isListening
-              ? 'bg-red-500 hover:bg-red-600 animate-pulse'
+              ? 'bg-custom-red hover:bg-red-600 animate-pulse'
               : 'bg-white hover:bg-gray-200'
             }
             disabled:opacity-50 disabled:cursor-not-allowed
@@ -198,7 +189,7 @@ export function VoiceInput({
 
       {/* Error Display */}
       {error && (
-        <div className="text-red-500 text-sm text-center">{error}</div>
+        <div className="text-custom-red text-sm text-center">{error}</div>
       )}
 
       {/* Help Text */}
@@ -211,3 +202,5 @@ export function VoiceInput({
     </div>
   )
 }
+
+export default VoiceInput

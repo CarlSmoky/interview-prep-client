@@ -48,7 +48,6 @@ function RouteComponent() {
     if (!file) return
 
     try {
-      console.log('Reading file:', file.name)
       let text: string
 
       if (file.type === 'application/pdf') {
@@ -111,7 +110,6 @@ function RouteComponent() {
   }
 
   const handleStartInterview = () => {
-    // Validate form
     const valid = resume.trim() !== '' && jobDescription.trim() !== '' && questions >= 1 && questions <= 10
     setIsFormValid(valid)
 
@@ -287,14 +285,14 @@ function RouteComponent() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormSelect
                 id="interviewType"
-                label="Interview Type"
+                label="Interview Type*"
                 value={interviewType}
                 onChange={setInterviewType}
                 options={INTERVIEW_TYPE_OPTIONS}
               />
               <FormNumberInput
                 id="questions"
-                label="Number of Questions"
+                label="Number of Questions*"
                 value={questions}
                 onChange={setQuestions}
                 min={1}
@@ -304,11 +302,11 @@ function RouteComponent() {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm">{error}</div>
+            <div className="text-custom-red text-sm">{error}</div>
           )}
 
           {!isFormValid && (
-            <div className="text-red-500 text-sm">
+            <div className="text-custom-red text-sm">
               Please provide Resume, Job Description.
             </div>
           )}
@@ -320,6 +318,7 @@ function RouteComponent() {
               isLoading={isGeneratingQuestions}
               type="button"
               onClick={handleViewQuestions}
+              variant='outline'
             />
             <FormButton
               text="Start Interview"
