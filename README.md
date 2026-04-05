@@ -61,19 +61,9 @@ bun dev
 
 ## Voice Mode
 
-The app supports **two voice input options**:
-
-### 1. Browser Speech (Free - Recommended)
-
-- ✅ **No API key needed**
-- ✅ Works in Chrome, Edge, Safari
-- ✅ Uses browser's built-in Web Speech API
-- ✅ Perfect for simple transcription
-
-### 2. Vapi.ai (Professional)
+### Vapi.ai
 
 - Requires API key from [vapi.ai](https://vapi.ai)
-- Professional-grade speech recognition
 - Better accuracy in noisy environments
 - Requires credits/billing
 
