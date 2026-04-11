@@ -91,15 +91,11 @@ bun dev
 
 **Architecture:**
 
-```
 User speaks → Voice Service (Speech-to-Text) → Frontend → Backend (Question Generation & Answer Evaluation) → Results
-```
 
 - **Voice Service**: Converts speech to text
 - **Backend**: Generates questions, evaluates answers, provides feedback
 - **No LLM runs in voice service** - all intelligence is in your backend
 
-```
-For running this app's server, go to [Ace the Intereview + AI Server](https://github.com/CarlSmoky/interview-prep-server)
-
-```
+For running this app's server, go to [Ace the Interview + AI Server](https://github.com/CarlSmoky/interview-prep-server)
+git branch
