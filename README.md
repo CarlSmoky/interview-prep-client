@@ -10,6 +10,21 @@ An AI-powered interview practice application with support for both text and voic
 - Detailed scoring and feedback
 - Progress tracking and results analysis
 
+## Final Product
+
+<div>
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/ace-the-interview-ai-desktop.png" alt="desktop image" width="500px">
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/info.png" alt="Detail page" width="500px">
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/sample-questions.png" alt="Detail page" width="500px">
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/select-mode.png" alt="Detail page" width="500px">
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/answer-voice.png" alt="Detail page" width="500px">
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/answer-voice.png" alt="Detail page" width="500px">
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/result.png" alt="Detail page" width="500px">
+</div>
+<div>
+<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/ace-the-interview-ai-mobile.png" alt="Map page For Mobile" height="400px">
+</div>
+
 ## Setup
 
 ### 1. Install Dependencies
@@ -80,10 +95,11 @@ bun dev
 User speaks → Voice Service (Speech-to-Text) → Frontend → Backend (Question Generation & Answer Evaluation) → Results
 ```
 
-- **Voice Service**: Converts speech to text (transcription only)
+- **Voice Service**: Converts speech to text
 - **Backend**: Generates questions, evaluates answers, provides feedback
 - **No LLM runs in voice service** - all intelligence is in your backend
 
 ```
+For running this app's server, go to [Ace the Intereview + AI Server](https://github.com/CarlSmoky/interview-prep-server)
 
 ```
