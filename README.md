@@ -18,7 +18,6 @@ An AI-powered interview practice application with support for both text and voic
 <img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/sample-questions.png" alt="Detail page" width="500px">
 <img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/select-mode.png" alt="Detail page" width="500px">
 <img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/answer-voice.png" alt="Detail page" width="500px">
-<img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/answer-voice.png" alt="Detail page" width="500px">
 <img src="https://github.com/CarlSmoky/interview-prep-client/blob/main/docs/result.png" alt="Detail page" width="500px">
 </div>
 <div>
