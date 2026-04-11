@@ -4,11 +4,11 @@ An AI-powered interview practice application with support for both text and voic
 
 ## Features
 
-- 🎯 Technical, Behavioral, or Mixed interview questions
-- 💬 Text-based interview mode
-- 🎤 Voice-based interview mode (powered by Vapi.ai)
-- 📊 Detailed scoring and feedback
-- 📈 Progress tracking and results analysis
+- Technical, Behavioral, or Mixed interview questions
+- Text-based interview mode
+- Voice-based interview mode (powered by Vapi.ai)
+- Detailed scoring and feedback
+- Progress tracking and results analysis
 
 ## Setup
 
@@ -83,14 +83,6 @@ User speaks → Voice Service (Speech-to-Text) → Frontend → Backend (Questio
 - **Voice Service**: Converts speech to text (transcription only)
 - **Backend**: Generates questions, evaluates answers, provides feedback
 - **No LLM runs in voice service** - all intelligence is in your backend
-
-### Troubleshooting Vapi Errors
-
-If you see "daily-error" or "Meeting ended" errors with Vapi:
-
-1. Check your Vapi account has credits/valid billing
-2. Verify your API key is correct
-3. Switch to **Browser Speech (Free)** option as alternative
 
 ```
 
