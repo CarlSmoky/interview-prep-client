@@ -30,3 +30,15 @@ body,
   height: 100%;
   width: 100%;
 }
+
+[data-amplify-authenticator] {
+  --amplify-components-button-primary-background-color: #bd93bd;
+  --amplify-components-button-primary-color: #fff;
+  --amplify-components-button-primary-hover-background-color: #a87da8;
+  --amplify-components-button-primary-hover-color: #fff;
+  --amplify-components-button-primary-active-background-color: #946f94;
+  --amplify-components-tabs-item-active-color: #bd93bd;
+  --amplify-components-tabs-item-active-border-color: #bd93bd;
+  --amplify-components-tabs-item-hover-color: #bd93bd;
+  --amplify-components-fieldcontrol-focus-border-color: #bd93bd;
+}

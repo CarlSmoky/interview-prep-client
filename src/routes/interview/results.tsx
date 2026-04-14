@@ -11,8 +11,10 @@ import { calculateOverallScore } from '../../lib/utils/calculateOverallScore'
 import { downloadAsCSV, downloadAsText, downloadAsPDF } from '../../lib/utils/downloadResults'
 import LoadingResults from '../../components/LoadingResults'
 import type { InterviewMetadata, QuestionResult } from '../../type/interview'
+import { requireAuth } from '../../lib/auth/config'
 
 export const Route = createFileRoute('/interview/results')({
+  beforeLoad: () => requireAuth(),
   component: RouteComponent,
 })
 
@@ -55,9 +57,7 @@ function RouteComponent() {
 
   const fetchFinalReport = async (sessionId: string) => {
     try {
-      console.log('Fetching interview results for session:', sessionId)
       const response = await finishInterview({ sessionId })
-      console.log('Received final report:', response)
       return response.finalReport
     } catch (err) {
       console.error('Error finishing interview:', err)
@@ -71,9 +71,6 @@ function RouteComponent() {
 
     const fetchResults = async () => {
       const { results, sessionId, metadata } = parseStateData()
-
-      console.log('Results from navigation state:', results)
-      console.log('Number of results:', results.length)
 
       setStoredResults(results)
       setMetadata(metadata)

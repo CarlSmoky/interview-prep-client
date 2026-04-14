@@ -10,8 +10,10 @@ import FormInput from '../../components/FormInput'
 import { extractTextFromPDF, readTextFile } from '../../lib/utils/fileReader'
 import { FileText, Briefcase, Settings } from 'lucide-react'
 import ModeSelectionModal from '../../components/ModeSelectionModal'
+import { requireAuth } from '../../lib/auth/config'
 
 export const Route = createFileRoute('/interview/')({
+  beforeLoad: () => requireAuth(),
   component: RouteComponent,
 })
 

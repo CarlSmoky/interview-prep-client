@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InterviewIndexRouteImport } from './routes/interview/index'
 import { Route as InterviewSessionRouteImport } from './routes/interview/session'
 import { Route as InterviewResultsRouteImport } from './routes/interview/results'
 import { Route as InterviewQuestionsRouteImport } from './routes/interview/questions'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const InterviewQuestionsRoute = InterviewQuestionsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/interview/questions': typeof InterviewQuestionsRoute
   '/interview/results': typeof InterviewResultsRoute
   '/interview/session': typeof InterviewSessionRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/interview/questions': typeof InterviewQuestionsRoute
   '/interview/results': typeof InterviewResultsRoute
   '/interview/session': typeof InterviewSessionRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/interview/questions': typeof InterviewQuestionsRoute
   '/interview/results': typeof InterviewResultsRoute
   '/interview/session': typeof InterviewSessionRoute
@@ -67,6 +76,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/interview/questions'
     | '/interview/results'
     | '/interview/session'
@@ -74,6 +84,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/interview/questions'
     | '/interview/results'
     | '/interview/session'
@@ -81,6 +92,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/login'
     | '/interview/questions'
     | '/interview/results'
     | '/interview/session'
@@ -89,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   InterviewQuestionsRoute: typeof InterviewQuestionsRoute
   InterviewResultsRoute: typeof InterviewResultsRoute
   InterviewSessionRoute: typeof InterviewSessionRoute
@@ -97,6 +110,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -137,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   InterviewQuestionsRoute: InterviewQuestionsRoute,
   InterviewResultsRoute: InterviewResultsRoute,
   InterviewSessionRoute: InterviewSessionRoute,
