@@ -10,7 +10,7 @@ const HeroSection = () => {
   const handleGetStarted = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      navigate({ to: '/login' });
+      navigate({ to: '/login', search: { redirect: '/interview' } });
     }
   };
   return (

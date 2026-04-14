@@ -1,3 +1,5 @@
+import { fetchAuthSession } from "aws-amplify/auth";
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
@@ -90,16 +92,24 @@ export interface FinishInterviewResponse {
   finalReport: FinalReport;
 }
 
-export async function startInterview(
-  data: StartInterviewRequest,
-): Promise<StartInterviewResponse> {
-  const response = await fetch(`${API_BASE_URL}/interview/start`, {
+const apiRequest = async (url: string, body: object): Promise<Response> => {
+  const session = await fetchAuthSession();
+  const token = session.tokens?.idToken?.toString();
+
+  return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
   });
+};
+
+export const startInterview = async (
+  data: StartInterviewRequest,
+): Promise<StartInterviewResponse> => {
+  const response = await apiRequest(`${API_BASE_URL}/interview/start`, data);
 
   const result = await response.json();
 
@@ -110,18 +120,12 @@ export async function startInterview(
   }
 
   return result;
-}
+};
 
-export async function submitAnswer(
+export const submitAnswer = async (
   data: SubmitAnswerRequest,
-): Promise<SubmitAnswerResponse> {
-  const response = await fetch(`${API_BASE_URL}/interview/answer`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+): Promise<SubmitAnswerResponse> => {
+  const response = await apiRequest(`${API_BASE_URL}/interview/answer`, data);
 
   if (!response.ok) {
     const error = await response
@@ -131,18 +135,12 @@ export async function submitAnswer(
   }
 
   return response.json();
-}
+};
 
-export async function finishInterview(
+export const finishInterview = async (
   data: FinishInterviewRequest,
-): Promise<FinishInterviewResponse> {
-  const response = await fetch(`${API_BASE_URL}/interview/finish`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+): Promise<FinishInterviewResponse> => {
+  const response = await apiRequest(`${API_BASE_URL}/interview/finish`, data);
 
   if (!response.ok) {
     const error = await response
@@ -152,7 +150,7 @@ export async function finishInterview(
   }
 
   return response.json();
-}
+};
 
 export interface QuestionWithAnswer {
   question: string;
@@ -181,13 +179,10 @@ export interface GenerateQuestionsResponse {
 export async function generateQuestions(
   data: GenerateQuestionsRequest,
 ): Promise<GenerateQuestionsResponse> {
-  const response = await fetch(`${API_BASE_URL}/interview/generate-questions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await apiRequest(
+    `${API_BASE_URL}/interview/generate-questions`,
+    data,
+  );
 
   const result = await response.json();
 

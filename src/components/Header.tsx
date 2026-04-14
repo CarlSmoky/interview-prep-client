@@ -1,11 +1,13 @@
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { ChessKing, Menu, X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 
 const Header = () => {
   const { user, signOut } = useAuthenticator((context) => [context.user]);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -42,6 +44,7 @@ const Header = () => {
                   onClick={() => {
                     signOut();
                     setMenuOpen(false);
+                    navigate({ to: '/' });
                   }}
                   className="w-full text-left px-4 py-2 text-sm text-white hover:text-white/60 transition-colors"
                 >

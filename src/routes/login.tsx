@@ -6,19 +6,23 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { ArrowLeft } from 'lucide-react';
 
 export const Route = createFileRoute('/login')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect: (search.redirect as string) || '/',
+  }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { redirect } = Route.useSearch();
   const { user } = useAuthenticator((context) => [context.user]);
 
-  // Redirect to home if already logged in
+  // Redirect after login (or if already logged in)
   useEffect(() => {
     if (user) {
-      navigate({ to: '/' });
+      navigate({ to: redirect });
     }
-  }, [user, navigate]);
+  }, [user, navigate, redirect]);
 
   return (
     <div className="min-h-screen flex items-center justify-center ">
