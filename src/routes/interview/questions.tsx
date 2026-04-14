@@ -5,8 +5,10 @@ import { generateQuestions, startInterview, type QuestionWithAnswer, type Analys
 import { getMockStartInterviewResponse, mockDelay } from '../../lib/mock/interviewMock'
 import ModeSelectionModal from '../../components/ModeSelectionModal'
 import jsPDF from 'jspdf'
+import { requireAuth } from '../../lib/auth/config'
 
 export const Route = createFileRoute('/interview/questions')({
+  beforeLoad: () => requireAuth(),
   component: RouteComponent,
 })
 

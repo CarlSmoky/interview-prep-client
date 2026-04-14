@@ -7,8 +7,10 @@ import TextModeInput from '../../components/TextModeInput'
 import ProgressHeader from '../../components/ProgressHeader'
 import ModeIndicator from '../../components/ModeIndicator'
 import type { QuestionResult, SessionData } from '../../type/interview'
+import { requireAuth } from '../../lib/auth/config'
 
 export const Route = createFileRoute('/interview/session')({
+  beforeLoad: () => requireAuth(),
   component: RouteComponent,
 })
 
