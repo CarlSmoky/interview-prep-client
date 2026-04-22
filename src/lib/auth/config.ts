@@ -9,7 +9,7 @@ export const requireAuth = async () => {
       throw new Error("Not authenticated");
     }
   } catch {
-    throw redirect({ to: "/login" });
+    throw redirect({ to: "/login", search: { redirect: "/interview" } });
   }
 };
 
